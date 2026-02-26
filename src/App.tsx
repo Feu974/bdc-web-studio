@@ -8,6 +8,16 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const infrastructuresRef = useRef<HTMLElement>(null)
+  const methodsRef = useRef<HTMLElement>(null)
+  const ctaRef = useRef<HTMLElement>(null)
+
+  const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
+    ref.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -134,7 +144,10 @@ function App() {
             <span className="text-xl font-bold tracking-tight">BDC Web</span>
             <span className="w-1.5 h-1.5 bg-white rounded-sm"></span>
           </div>
-          <Button className="bg-white text-black hover:bg-zinc-100 font-semibold tracking-tight">
+          <Button 
+            onClick={() => scrollToSection(ctaRef)}
+            className="bg-white text-black hover:bg-zinc-100 font-semibold tracking-tight"
+          >
             Vérifier mon éligibilité
           </Button>
         </div>
@@ -172,11 +185,15 @@ function App() {
             className="flex flex-col sm:flex-row gap-4"
             variants={slideInLeft}
           >
-            <Button className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-base px-8 py-6">
+            <Button 
+              onClick={() => scrollToSection(infrastructuresRef)}
+              className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-base px-8 py-6"
+            >
               Voir les Infrastructures
               <ChevronRight className="ml-2 h-5 w-5" />
             </Button>
             <Button
+              onClick={() => scrollToSection(ctaRef)}
               variant="outline"
               className="bg-zinc-950 text-white border-zinc-800 hover:bg-zinc-900 hover:border-zinc-700 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-base px-8 py-6"
             >
@@ -239,6 +256,7 @@ function App() {
       </motion.section>
 
       <motion.section 
+        ref={infrastructuresRef}
         className="bg-zinc-950 py-20 md:py-32 px-6 md:px-8"
         initial="hidden"
         whileInView="visible"
@@ -303,6 +321,7 @@ function App() {
       </motion.section>
 
       <motion.section 
+        ref={methodsRef}
         className="bg-white text-black py-20 md:py-32 px-6 md:px-8"
         initial="hidden"
         whileInView="visible"
@@ -341,6 +360,7 @@ function App() {
       </motion.section>
 
       <motion.section 
+        ref={ctaRef}
         className="bg-zinc-950 py-20 md:py-32 px-6 md:px-8"
         initial="hidden"
         whileInView="visible"
@@ -358,7 +378,10 @@ function App() {
             Prêt à moderniser votre infrastructure ?
           </motion.h2>
           <motion.div variants={fadeInUp}>
-            <Button className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-lg px-10 py-7">
+            <Button 
+              onClick={() => scrollToSection(methodsRef)}
+              className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-lg px-10 py-7"
+            >
               Démarrer le déploiement
               <ChevronRight className="ml-2 h-5 w-5" />
             </Button>

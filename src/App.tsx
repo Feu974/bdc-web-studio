@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Code2, ShieldCheck, Zap, ChevronRight, Check } from 'lucide-react'
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion'
 import { toast } from 'sonner'
+import { ChatWidget } from '@/components/ChatWidget'
 
 function AnimatedCounter({ end, duration = 2, suffix = '' }: { end: number; duration?: number; suffix?: string }) {
   const [count, setCount] = useState(0)
@@ -753,6 +754,8 @@ function App() {
           </form>
         </DialogContent>
       </Dialog>
+
+      <ChatWidget />
     </div>
   )
 }

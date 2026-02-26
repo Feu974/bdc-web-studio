@@ -8,6 +8,8 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLElement>(null)
+  const metricsRef = useRef<HTMLElement>(null)
   const infrastructuresRef = useRef<HTMLElement>(null)
   const methodsRef = useRef<HTMLElement>(null)
   const ctaRef = useRef<HTMLElement>(null)
@@ -29,6 +31,46 @@ function App() {
     damping: 30,
     restDelta: 0.001
   })
+
+  const { scrollY: heroScrollY } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  })
+
+  const { scrollY: metricsScrollY } = useScroll({
+    target: metricsRef,
+    offset: ["start end", "end start"]
+  })
+  
+  const { scrollY: infraScrollY } = useScroll({
+    target: infrastructuresRef,
+    offset: ["start end", "end start"]
+  })
+  
+  const { scrollY: methodsScrollY } = useScroll({
+    target: methodsRef,
+    offset: ["start end", "end start"]
+  })
+
+  const { scrollY: ctaScrollY } = useScroll({
+    target: ctaRef,
+    offset: ["start end", "end start"]
+  })
+
+  const heroParallaxY = useTransform(heroScrollY, [0, 1000], [0, -200])
+  const heroOpacity = useTransform(heroScrollY, [0, 500], [1, 0])
+  const heroScale = useTransform(heroScrollY, [0, 500], [1, 0.95])
+
+  const metricsParallaxY = useTransform(metricsScrollY, [0, 800], [60, -60])
+  
+  const infraParallaxY = useTransform(infraScrollY, [0, 1000], [100, -100])
+  const infraScale = useTransform(infraScrollY, [0, 500, 1000], [0.95, 1, 0.98])
+  
+  const methodsParallaxY = useTransform(methodsScrollY, [0, 1000], [80, -80])
+  const methodsRotate = useTransform(methodsScrollY, [0, 500, 1000], [-0.5, 0, 0.5])
+
+  const ctaParallaxY = useTransform(ctaScrollY, [0, 800], [50, -50])
+  const ctaScale = useTransform(ctaScrollY, [0, 400, 800], [0.96, 1.02, 0.98])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -133,7 +175,7 @@ function App() {
   ]
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-black text-zinc-50">
+    <div ref={containerRef} className="min-h-screen bg-black text-zinc-50 overflow-x-hidden">
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? 'bg-black/80 backdrop-blur-md border-b border-zinc-800' : 'bg-transparent'
@@ -161,13 +203,36 @@ function App() {
       </nav>
 
       <motion.section 
-        className="pt-32 pb-20 md:pt-40 md:pb-32 px-6 md:px-8"
+        ref={heroRef}
+        className="relative pt-32 pb-20 md:pt-40 md:pb-32 px-6 md:px-8 overflow-hidden"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
         variants={staggerContainer}
       >
-        <div className="max-w-7xl mx-auto">
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 via-transparent to-black pointer-events-none"
+          style={{ 
+            y: heroParallaxY,
+            opacity: heroOpacity,
+            scale: heroScale
+          }}
+        />
+        <motion.div 
+          className="absolute top-20 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: heroParallaxY,
+            x: useTransform(heroScrollY, [0, 500], [0, 100])
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-0 left-0 w-72 h-72 bg-accent/10 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: useTransform(heroScrollY, [0, 500], [0, -80]),
+            x: useTransform(heroScrollY, [0, 500], [0, -50])
+          }}
+        />
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.h1 
             className="text-4xl md:text-6xl font-bold tracking-tighter leading-none mb-6 max-w-4xl"
             variants={slideInLeft}
@@ -204,13 +269,20 @@ function App() {
       </motion.section>
 
       <motion.section 
-        className="pb-20 md:pb-32 px-6 md:px-8"
+        ref={metricsRef}
+        className="relative pb-20 md:pb-32 px-6 md:px-8 overflow-hidden"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
         variants={staggerContainer}
       >
-        <div className="max-w-7xl mx-auto">
+        <motion.div 
+          className="absolute top-0 right-1/3 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: metricsParallaxY
+          }}
+        />
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.div 
             className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 md:divide-x divide-zinc-800"
             variants={staggerContainer}
@@ -257,13 +329,26 @@ function App() {
 
       <motion.section 
         ref={infrastructuresRef}
-        className="bg-zinc-950 py-20 md:py-32 px-6 md:px-8"
+        className="relative bg-zinc-950 py-20 md:py-32 px-6 md:px-8 overflow-hidden"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={staggerContainer}
       >
-        <div className="max-w-7xl mx-auto">
+        <motion.div 
+          className="absolute top-0 left-1/4 w-80 h-80 bg-accent/5 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: infraParallaxY,
+            scale: infraScale
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: useTransform(infraScrollY, [0, 1000], [-50, 50])
+          }}
+        />
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.h2 
             className="text-3xl md:text-5xl font-bold tracking-tight mb-12"
             variants={fadeInUp}
@@ -322,13 +407,27 @@ function App() {
 
       <motion.section 
         ref={methodsRef}
-        className="bg-white text-black py-20 md:py-32 px-6 md:px-8"
+        className="relative bg-white text-black py-20 md:py-32 px-6 md:px-8 overflow-hidden"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-120px" }}
         variants={staggerContainer}
       >
-        <div className="max-w-7xl mx-auto">
+        <motion.div 
+          className="absolute top-1/4 right-0 w-72 h-72 bg-black/5 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: methodsParallaxY,
+            rotate: methodsRotate
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-0 left-1/4 w-80 h-80 bg-accent/10 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: useTransform(methodsScrollY, [0, 1000], [60, -60]),
+            scale: useTransform(methodsScrollY, [0, 500, 1000], [0.9, 1.05, 0.95])
+          }}
+        />
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.h2 
             className="text-3xl md:text-5xl font-bold tracking-tight mb-12"
             variants={fadeInUp}
@@ -361,14 +460,28 @@ function App() {
 
       <motion.section 
         ref={ctaRef}
-        className="bg-zinc-950 py-20 md:py-32 px-6 md:px-8"
+        className="relative bg-zinc-950 py-20 md:py-32 px-6 md:px-8 overflow-hidden"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={fadeInScale}
       >
         <motion.div 
-          className="max-w-4xl mx-auto text-center"
+          className="absolute top-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: ctaParallaxY,
+            scale: ctaScale
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: useTransform(ctaScrollY, [0, 800], [-40, 40]),
+            x: useTransform(ctaScrollY, [0, 800], [0, -60])
+          }}
+        />
+        <motion.div 
+          className="max-w-4xl mx-auto text-center relative z-10"
           variants={fadeInScale}
         >
           <motion.h2 

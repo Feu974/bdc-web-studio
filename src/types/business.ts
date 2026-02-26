@@ -97,3 +97,38 @@ export interface EligibilityFormData {
   consent: boolean;
   honeypot: string;
 }
+
+// ============================================================
+// TYPES BACKEND — Pipeline Kap Numérik
+// Re-exportes depuis les types Supabase pour usage dans les composants.
+// ============================================================
+
+export type {
+  ProjectStatus,
+  CompanySize,
+  BudgetRange,
+  DocumentType,
+} from "@/lib/supabase/database.types";
+
+export type { GuardResult } from "@/lib/supabase/guards";
+
+/** Données du devis pour génération PDF (Livrable 3) */
+export interface QuoteGenerationData {
+  projectId: string;
+  clientName: string;
+  clientCompany: string;
+  clientSiret: string;
+  clientEmail: string;
+  clientPhone: string;
+  quoteAmountHT: number;
+  federCoverageRate: number;
+  federAmountHT: number;
+  remainingChargeHT: number;
+  tvaRate: number;
+  federDossierNumber: string;
+  arRegionReference: string;
+  arRegionReceivedAt: string;
+  quoteValidUntil: string;
+  features: FeatureItem[];
+  legalMentions: LegalMentions;
+}

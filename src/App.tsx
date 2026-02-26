@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Code2, ShieldCheck, Zap, ChevronRight } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -14,6 +15,26 @@ function App() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 60 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" as const }
+    }
+  }
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1
+      }
+    }
+  }
 
   const infrastructures = [
     {
@@ -70,16 +91,31 @@ function App() {
         </div>
       </nav>
 
-      <section className="pt-32 pb-20 md:pt-40 md:pb-32 px-6 md:px-8">
+      <motion.section 
+        className="pt-32 pb-20 md:pt-40 md:pb-32 px-6 md:px-8"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-none mb-6 max-w-4xl">
+          <motion.h1 
+            className="text-4xl md:text-6xl font-bold tracking-tighter leading-none mb-6 max-w-4xl"
+            variants={fadeInUp}
+          >
             Ingénierie Web. Sans compromis. Que de la performance.
-          </h1>
-          <p className="text-lg md:text-xl text-zinc-400 leading-relaxed mb-10 max-w-3xl">
+          </motion.h1>
+          <motion.p 
+            className="text-lg md:text-xl text-zinc-400 leading-relaxed mb-10 max-w-3xl"
+            variants={fadeInUp}
+          >
             Nous déployons des solutions logicielles et des infrastructures web haute disponibilité.
             Éligible aux dispositifs de financement régionaux.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
+          </motion.p>
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4"
+            variants={fadeInUp}
+          >
             <Button className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-base px-8 py-6">
               Voir les Infrastructures
               <ChevronRight className="ml-2 h-5 w-5" />
@@ -90,52 +126,88 @@ function App() {
             >
               Audit Technique Gratuit
             </Button>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="pb-20 md:pb-32 px-6 md:px-8">
+      <motion.section 
+        className="pb-20 md:pb-32 px-6 md:px-8"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+      >
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 md:divide-x divide-zinc-800">
-            <div className="flex flex-col items-start md:px-8 first:pl-0 last:pr-0">
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 md:divide-x divide-zinc-800"
+            variants={staggerContainer}
+          >
+            <motion.div 
+              className="flex flex-col items-start md:px-8 first:pl-0 last:pr-0"
+              variants={fadeInUp}
+            >
               <div className="text-5xl font-bold tracking-tighter mb-2">98/100</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
                 Score de Performance
               </div>
-            </div>
-            <div className="flex flex-col items-start md:px-8">
+            </motion.div>
+            <motion.div 
+              className="flex flex-col items-start md:px-8"
+              variants={fadeInUp}
+            >
               <div className="text-5xl font-bold tracking-tighter mb-2">100%</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
                 Propriété du Code
               </div>
-            </div>
-            <div className="flex flex-col items-start md:px-8">
+            </motion.div>
+            <motion.div 
+              className="flex flex-col items-start md:px-8"
+              variants={fadeInUp}
+            >
               <div className="text-5xl font-bold tracking-tighter mb-2">24/7</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
                 Maintien Opérationnel
               </div>
-            </div>
-            <div className="flex flex-col items-start md:px-8">
+            </motion.div>
+            <motion.div 
+              className="flex flex-col items-start md:px-8"
+              variants={fadeInUp}
+            >
               <div className="text-5xl font-bold tracking-tighter mb-2">0</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
                 Dette Technique
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="bg-zinc-950 py-20 md:py-32 px-6 md:px-8">
+      <motion.section 
+        className="bg-zinc-950 py-20 md:py-32 px-6 md:px-8"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-12">
+          <motion.h2 
+            className="text-3xl md:text-5xl font-bold tracking-tight mb-12"
+            variants={fadeInUp}
+          >
             Infrastructures Déployées.
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          </motion.h2>
+          <motion.div 
+            className="grid md:grid-cols-2 gap-6"
+            variants={staggerContainer}
+          >
             {infrastructures.map((project, index) => (
-              <Card
+              <motion.div
                 key={index}
-                className="bg-black border-zinc-800 p-6 md:p-8 hover:border-zinc-700 hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 group"
+                variants={fadeInUp}
               >
+                <Card
+                  className="bg-black border-zinc-800 p-6 md:p-8 hover:border-zinc-700 hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 group"
+                >
                 <div className="flex items-start justify-between mb-6">
                   <div>
                     <h3 className="text-xl font-bold mb-2">{project.title}</h3>
@@ -168,42 +240,75 @@ function App() {
                   </div>
                 </div>
               </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="bg-white text-black py-20 md:py-32 px-6 md:px-8">
+      <motion.section 
+        className="bg-white text-black py-20 md:py-32 px-6 md:px-8"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-12">Le Standard BDC.</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <motion.h2 
+            className="text-3xl md:text-5xl font-bold tracking-tight mb-12"
+            variants={fadeInUp}
+          >
+            Le Standard BDC.
+          </motion.h2>
+          <motion.div 
+            className="grid md:grid-cols-3 gap-8"
+            variants={staggerContainer}
+          >
             {methods.map((method, index) => {
               const Icon = method.icon
               return (
-                <div key={index} className="space-y-4">
+                <motion.div 
+                  key={index} 
+                  className="space-y-4"
+                  variants={fadeInUp}
+                >
                   <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-xl font-bold">{method.title}</h3>
                   <p className="text-zinc-600 leading-relaxed">{method.description}</p>
-                </div>
+                </motion.div>
               )
             })}
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="bg-zinc-950 py-20 md:py-32 px-6 md:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-8">
+      <motion.section 
+        className="bg-zinc-950 py-20 md:py-32 px-6 md:px-8"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
+        <motion.div 
+          className="max-w-4xl mx-auto text-center"
+          variants={fadeInUp}
+        >
+          <motion.h2 
+            className="text-3xl md:text-5xl font-bold tracking-tight mb-8"
+            variants={fadeInUp}
+          >
             Prêt à moderniser votre infrastructure ?
-          </h2>
-          <Button className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-lg px-10 py-7">
-            Démarrer le déploiement
-            <ChevronRight className="ml-2 h-5 w-5" />
-          </Button>
-        </div>
-      </section>
+          </motion.h2>
+          <motion.div variants={fadeInUp}>
+            <Button className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-lg px-10 py-7">
+              Démarrer le déploiement
+              <ChevronRight className="ml-2 h-5 w-5" />
+            </Button>
+          </motion.div>
+        </motion.div>
+      </motion.section>
 
       <footer className="bg-black border-t border-zinc-800 py-8 px-6 md:px-8">
         <div className="max-w-7xl mx-auto text-center text-sm text-zinc-400">

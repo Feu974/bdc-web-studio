@@ -2,16 +2,58 @@ import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Code2, ShieldCheck, Zap, ChevronRight } from 'lucide-react'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Code2, ShieldCheck, Zap, ChevronRight, Check } from 'lucide-react'
+import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion'
+import { toast } from 'sonner'
+
+function AnimatedCounter({ end, duration = 2, suffix = '' }: { end: number; duration?: number; suffix?: string }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
+
+  useEffect(() => {
+    if (!isInView) return
+    
+    let startTime: number | null = null
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime
+      const progress = Math.min((currentTime - startTime) / (duration * 1000), 1)
+      
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+      setCount(Math.floor(easeOutQuart * end))
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        setCount(end)
+      }
+    }
+    
+    requestAnimationFrame(animate)
+  }, [isInView, end, duration])
+
+  return <div ref={ref}>{count}{suffix}</div>
+}
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    message: ''
+  })
   const containerRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLElement>(null)
   const metricsRef = useRef<HTMLElement>(null)
   const infrastructuresRef = useRef<HTMLElement>(null)
   const methodsRef = useRef<HTMLElement>(null)
+  const pricingRef = useRef<HTMLElement>(null)
   const ctaRef = useRef<HTMLElement>(null)
 
   const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
@@ -52,10 +94,22 @@ function App() {
     offset: ["start end", "end start"]
   })
 
+  const { scrollY: pricingScrollY } = useScroll({
+    target: pricingRef,
+    offset: ["start end", "end start"]
+  })
+
   const { scrollY: ctaScrollY } = useScroll({
     target: ctaRef,
     offset: ["start end", "end start"]
   })
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    toast.success('Demande envoyée avec succès ! Nous vous contacterons sous 24h.')
+    setIsContactModalOpen(false)
+    setFormData({ name: '', email: '', company: '', message: '' })
+  }
 
   const heroParallaxY = useTransform(heroScrollY, [0, 1000], [0, -200])
   const heroOpacity = useTransform(heroScrollY, [0, 500], [1, 0])
@@ -68,6 +122,9 @@ function App() {
   
   const methodsParallaxY = useTransform(methodsScrollY, [0, 1000], [80, -80])
   const methodsRotate = useTransform(methodsScrollY, [0, 500, 1000], [-0.5, 0, 0.5])
+
+  const pricingParallaxY = useTransform(pricingScrollY, [0, 1000], [70, -70])
+  const pricingScale = useTransform(pricingScrollY, [0, 500, 1000], [0.97, 1, 0.98])
 
   const ctaParallaxY = useTransform(ctaScrollY, [0, 800], [50, -50])
   const ctaScale = useTransform(ctaScrollY, [0, 400, 800], [0.96, 1.02, 0.98])
@@ -174,6 +231,52 @@ function App() {
     }
   ]
 
+  const pricingTiers = [
+    {
+      name: 'Starter',
+      price: '2 500',
+      period: 'forfait unique',
+      description: 'Site vitrine professionnel',
+      features: [
+        '5 pages personnalisées',
+        'Design responsive',
+        'SEO optimisé',
+        'Hébergement 1 an inclus',
+        'SSL & sécurité de base',
+        '2 révisions incluses'
+      ]
+    },
+    {
+      name: 'Business',
+      price: '5 900',
+      period: 'forfait unique',
+      description: 'Application web sur mesure',
+      features: [
+        'Infrastructure cloud dédiée',
+        'Base de données sécurisée',
+        'API REST personnalisée',
+        'Panel d\'administration',
+        'MCO 24/7 pendant 3 mois',
+        'Formation utilisateurs'
+      ],
+      highlighted: true
+    },
+    {
+      name: 'Enterprise',
+      price: 'Sur devis',
+      period: 'projet personnalisé',
+      description: 'Solutions complexes haute disponibilité',
+      features: [
+        'Architecture microservices',
+        'Scalabilité automatique',
+        'CI/CD & DevOps',
+        'SLA 99.9% garanti',
+        'Support prioritaire',
+        'Audit sécurité complet'
+      ]
+    }
+  ]
+
   return (
     <div ref={containerRef} className="min-h-screen bg-black text-zinc-50 overflow-x-hidden">
       <nav
@@ -187,7 +290,7 @@ function App() {
             <span className="w-1.5 h-1.5 bg-white rounded-sm"></span>
           </div>
           <Button 
-            onClick={() => scrollToSection(ctaRef)}
+            onClick={() => setIsContactModalOpen(true)}
             className="bg-white text-black hover:bg-zinc-100 font-semibold tracking-tight"
           >
             Vérifier mon éligibilité
@@ -291,7 +394,7 @@ function App() {
               className="flex flex-col items-start md:px-8 first:pl-0 last:pr-0"
               variants={fadeInScale}
             >
-              <div className="text-5xl font-bold tracking-tighter mb-2">98/100</div>
+              <div className="text-5xl font-bold tracking-tighter mb-2"><AnimatedCounter end={98} />/100</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
                 Score de Performance
               </div>
@@ -300,7 +403,7 @@ function App() {
               className="flex flex-col items-start md:px-8"
               variants={fadeInScale}
             >
-              <div className="text-5xl font-bold tracking-tighter mb-2">100%</div>
+              <div className="text-5xl font-bold tracking-tighter mb-2"><AnimatedCounter end={100} suffix="%" /></div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
                 Propriété du Code
               </div>
@@ -309,7 +412,7 @@ function App() {
               className="flex flex-col items-start md:px-8"
               variants={fadeInScale}
             >
-              <div className="text-5xl font-bold tracking-tighter mb-2">24/7</div>
+              <div className="text-5xl font-bold tracking-tighter mb-2"><AnimatedCounter end={24} />/7</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
                 Maintien Opérationnel
               </div>
@@ -318,7 +421,7 @@ function App() {
               className="flex flex-col items-start md:px-8"
               variants={fadeInScale}
             >
-              <div className="text-5xl font-bold tracking-tighter mb-2">0</div>
+              <div className="text-5xl font-bold tracking-tighter mb-2"><AnimatedCounter end={0} /></div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
                 Dette Technique
               </div>
@@ -459,6 +562,88 @@ function App() {
       </motion.section>
 
       <motion.section 
+        ref={pricingRef}
+        className="relative bg-black py-20 md:py-32 px-6 md:px-8 overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+      >
+        <motion.div 
+          className="absolute top-1/3 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: pricingParallaxY,
+            scale: pricingScale
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none"
+          style={{ 
+            y: useTransform(pricingScrollY, [0, 1000], [-60, 60])
+          }}
+        />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.h2 
+            className="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-center"
+            variants={fadeInUp}
+          >
+            Tarification Transparente.
+          </motion.h2>
+          <motion.p 
+            className="text-zinc-400 text-center mb-12 max-w-2xl mx-auto"
+            variants={fadeInUp}
+          >
+            Des formules adaptées à chaque besoin. Financement régional possible.
+          </motion.p>
+          <motion.div 
+            className="grid md:grid-cols-3 gap-6"
+            variants={staggerContainer}
+          >
+            {pricingTiers.map((tier, index) => (
+              <motion.div
+                key={index}
+                variants={fadeInScale}
+              >
+                <Card
+                  className={`bg-zinc-950 border-zinc-800 p-8 h-full flex flex-col hover:border-zinc-700 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${
+                    tier.highlighted ? 'ring-2 ring-white' : ''
+                  }`}
+                >
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
+                    <p className="text-zinc-400 text-sm mb-4">{tier.description}</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-4xl font-bold tracking-tight">{tier.price}</span>
+                      {tier.price !== 'Sur devis' && <span className="text-zinc-400">€</span>}
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-1">{tier.period}</p>
+                  </div>
+                  <div className="space-y-3 flex-grow">
+                    {tier.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                        <span className="text-sm text-zinc-300">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <Button 
+                    onClick={() => setIsContactModalOpen(true)}
+                    className={`w-full mt-8 font-semibold tracking-tight ${
+                      tier.highlighted 
+                        ? 'bg-white text-black hover:bg-zinc-100' 
+                        : 'bg-zinc-900 text-white border border-zinc-800 hover:bg-zinc-800'
+                    }`}
+                  >
+                    Demander un devis
+                  </Button>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      <motion.section 
         ref={ctaRef}
         className="relative bg-zinc-950 py-20 md:py-32 px-6 md:px-8 overflow-hidden"
         initial="hidden"
@@ -507,6 +692,67 @@ function App() {
           <p>BDC Web - Programmation Informatique (62.01Z). Hébergement Haute Disponibilité.</p>
         </div>
       </footer>
+
+      <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
+        <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-50 max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold tracking-tight">Vérifier mon éligibilité</DialogTitle>
+            <DialogDescription className="text-zinc-400">
+              Remplissez ce formulaire pour recevoir une étude personnalisée sous 24h.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleContactSubmit} className="space-y-6 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-zinc-200">Nom complet</Label>
+              <Input
+                id="name"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="bg-zinc-900 border-zinc-800 text-zinc-50 focus:border-accent"
+                placeholder="Jean Dupont"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-zinc-200">Email professionnel</Label>
+              <Input
+                id="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="bg-zinc-900 border-zinc-800 text-zinc-50 focus:border-accent"
+                placeholder="jean@entreprise.fr"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="company" className="text-zinc-200">Entreprise</Label>
+              <Input
+                id="company"
+                required
+                value={formData.company}
+                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                className="bg-zinc-900 border-zinc-800 text-zinc-50 focus:border-accent"
+                placeholder="Nom de votre société"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="message" className="text-zinc-200">Description du projet</Label>
+              <Textarea
+                id="message"
+                required
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                className="bg-zinc-900 border-zinc-800 text-zinc-50 focus:border-accent min-h-[100px]"
+                placeholder="Décrivez brièvement votre besoin..."
+              />
+            </div>
+            <Button type="submit" className="w-full bg-white text-black hover:bg-zinc-100 font-semibold tracking-tight">
+              Envoyer la demande
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -216,64 +216,52 @@ function App() {
 
   const methods = [
     {
-      icon: Code2,
-      title: 'Code Natif',
-      description: 'Refus des templates lourds. Programmation optimisée.'
+      icon: Zap,
+      title: 'Performance Extrême',
+      description: 'Latence optimisée, architecture Edge. Temps de chargement minimaux.'
     },
     {
       icon: ShieldCheck,
-      title: 'Sécurité Active',
-      description: 'Sauvegardes automatisées, patchs de sécurité en temps réel.'
+      title: 'QA Zéro Défaut',
+      description: '7 critères bloquants validés avant toute mise en production.'
     },
     {
-      icon: Zap,
-      title: 'Conformité ZFANG',
-      description: 'Code NAF 62.01Z, devis normalisés pour subventions.'
+      icon: Code2,
+      title: 'Conformité Administrative',
+      description: 'Nous gérons la complexité du FEDER de A à Z. Aucun effort requis de votre part.'
     }
   ]
 
   const pricingTiers = [
     {
-      name: 'Starter',
-      price: '2 500',
-      period: 'forfait unique',
-      description: 'Site vitrine professionnel',
+      name: 'Pack Business Premium',
+      originalPrice: '4 000',
+      price: '800',
+      period: 'HT',
+      subventionAmount: '3 200',
+      description: 'L\'offre phare éligible Kap Numérik',
       features: [
-        '5 pages personnalisées',
-        'Design responsive',
-        'SEO optimisé',
-        'Hébergement 1 an inclus',
-        'SSL & sécurité de base',
-        '2 révisions incluses'
-      ]
-    },
-    {
-      name: 'Business',
-      price: '5 900',
-      period: 'forfait unique',
-      description: 'Application web sur mesure',
-      features: [
-        'Infrastructure cloud dédiée',
-        'Base de données sécurisée',
-        'API REST personnalisée',
-        'Panel d\'administration',
-        'MCO 24/7 pendant 3 mois',
-        'Formation utilisateurs'
+        'Site Next.js/React sur mesure',
+        'SEO Technique On-Page complet',
+        'Sécurité SSL Grade A',
+        'Hébergement haute disponibilité',
+        'Montage intégral du dossier administratif',
+        'Livraison en 5 jours ouvrés'
       ],
       highlighted: true
     },
     {
-      name: 'Enterprise',
-      price: 'Sur devis',
-      period: 'projet personnalisé',
-      description: 'Solutions complexes haute disponibilité',
+      name: 'Pacte de Sérénité',
+      price: '49',
+      period: 'HT / mois',
+      description: 'MCO - Maintenance en Conditions Opérationnelles',
       features: [
-        'Architecture microservices',
-        'Scalabilité automatique',
-        'CI/CD & DevOps',
-        'SLA 99.9% garanti',
-        'Support prioritaire',
-        'Audit sécurité complet'
+        'Hébergement Haute Disponibilité 99.9%',
+        'Sauvegardes automatisées quotidiennes',
+        'Mises à jour de sécurité en temps réel',
+        'Monitoring 24/7 proactif',
+        'Intervention sous 2h en cas d\'incident',
+        'Rapports mensuels de performance'
       ]
     }
   ]
@@ -341,32 +329,36 @@ function App() {
             className="text-4xl md:text-6xl font-bold tracking-tighter leading-none mb-6 max-w-4xl"
             variants={slideInLeft}
           >
-            Ingénierie Web. Sans compromis. Que de la performance.
+            L'ingénierie digitale des{' '}
+            <span className="bg-gradient-to-r from-zinc-300 to-zinc-600 bg-clip-text text-transparent">
+              leaders réunionnais
+            </span>
+            .
           </motion.h1>
           <motion.p 
             className="text-lg md:text-xl text-zinc-400 leading-relaxed mb-10 max-w-3xl"
             variants={slideInLeft}
           >
-            Nous déployons des solutions logicielles et des infrastructures web haute disponibilité.
-            Éligible aux dispositifs de financement régionaux.
+            Nous déployons des infrastructures web haute performance. Code propriétaire, sécurité militaire, 
+            et jusqu'à <span className="text-emerald-400 font-semibold">80% pris en charge par le FEDER</span>.
           </motion.p>
           <motion.div 
             className="flex flex-col sm:flex-row gap-4"
             variants={slideInLeft}
           >
             <Button 
-              onClick={() => scrollToSection(infrastructuresRef)}
+              onClick={() => scrollToSection(pricingRef)}
               className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-base px-8 py-6"
             >
-              Voir les Infrastructures
+              Demander un audit technique
               <ChevronRight className="ml-2 h-5 w-5" />
             </Button>
             <Button
-              onClick={() => scrollToSection(ctaRef)}
+              onClick={() => scrollToSection(infrastructuresRef)}
               variant="outline"
               className="bg-zinc-950 text-white border-zinc-800 hover:bg-zinc-900 hover:border-zinc-700 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-base px-8 py-6"
             >
-              Audit Technique Gratuit
+              Voir les architectures
             </Button>
           </motion.div>
         </div>
@@ -397,7 +389,25 @@ function App() {
             >
               <div className="text-5xl font-bold tracking-tighter mb-2"><AnimatedCounter end={98} />/100</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
-                Score de Performance
+                Score Lighthouse
+              </div>
+            </motion.div>
+            <motion.div 
+              className="flex flex-col items-start md:px-8"
+              variants={fadeInScale}
+            >
+              <div className="text-5xl font-bold tracking-tighter mb-2"><AnimatedCounter end={5} /> Jours</div>
+              <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
+                Délai de Déploiement
+              </div>
+            </motion.div>
+            <motion.div 
+              className="flex flex-col items-start md:px-8"
+              variants={fadeInScale}
+            >
+              <div className="text-5xl font-bold tracking-tighter mb-2 text-emerald-400"><AnimatedCounter end={80} suffix="%" /></div>
+              <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
+                Subvention Garantie
               </div>
             </motion.div>
             <motion.div 
@@ -407,24 +417,6 @@ function App() {
               <div className="text-5xl font-bold tracking-tighter mb-2"><AnimatedCounter end={100} suffix="%" /></div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
                 Propriété du Code
-              </div>
-            </motion.div>
-            <motion.div 
-              className="flex flex-col items-start md:px-8"
-              variants={fadeInScale}
-            >
-              <div className="text-5xl font-bold tracking-tighter mb-2"><AnimatedCounter end={24} />/7</div>
-              <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
-                Maintien Opérationnel
-              </div>
-            </motion.div>
-            <motion.div 
-              className="flex flex-col items-start md:px-8"
-              variants={fadeInScale}
-            >
-              <div className="text-5xl font-bold tracking-tighter mb-2"><AnimatedCounter end={0} /></div>
-              <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
-                Dette Technique
               </div>
             </motion.div>
           </motion.div>
@@ -536,7 +528,7 @@ function App() {
             className="text-3xl md:text-5xl font-bold tracking-tight mb-12"
             variants={fadeInUp}
           >
-            Le Standard BDC.
+            Le Standard BDC. Scientifique. Infaillible.
           </motion.h2>
           <motion.div 
             className="grid md:grid-cols-3 gap-8"
@@ -588,16 +580,16 @@ function App() {
             className="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-center"
             variants={fadeInUp}
           >
-            Tarification Transparente.
+            Infrastructures Éligibles. Reste à charge minimal.
           </motion.h2>
           <motion.p 
             className="text-zinc-400 text-center mb-12 max-w-2xl mx-auto"
             variants={fadeInUp}
           >
-            Des formules adaptées à chaque besoin. Financement régional possible.
+            Profitez du dispositif Kap Numérik avec jusqu'à 80% de subvention FEDER.
           </motion.p>
           <motion.div 
-            className="grid md:grid-cols-3 gap-6"
+            className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
             variants={staggerContainer}
           >
             {pricingTiers.map((tier, index) => (
@@ -613,11 +605,26 @@ function App() {
                   <div className="mb-6">
                     <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
                     <p className="text-zinc-400 text-sm mb-4">{tier.description}</p>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-bold tracking-tight">{tier.price}</span>
-                      {tier.price !== 'Sur devis' && <span className="text-zinc-400">€</span>}
-                    </div>
-                    <p className="text-xs text-zinc-500 mt-1">{tier.period}</p>
+                    {tier.originalPrice ? (
+                      <div className="space-y-2">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-2xl font-bold text-zinc-600 line-through">{tier.originalPrice} €</span>
+                          <span className="text-zinc-500 text-sm">{tier.period}</span>
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-5xl font-bold tracking-tight text-emerald-400">{tier.price}</span>
+                          <span className="text-emerald-400 text-xl">€ {tier.period}</span>
+                        </div>
+                        <p className="text-xs text-zinc-500 mt-2">
+                          Après aide Kap Numérik de {tier.subventionAmount} €
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-4xl font-bold tracking-tight">{tier.price}</span>
+                        <span className="text-zinc-400 text-sm">€ {tier.period}</span>
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-3 flex-grow">
                     {tier.features.map((feature, idx) => (
@@ -689,8 +696,13 @@ function App() {
       </motion.section>
 
       <footer className="bg-black border-t border-zinc-800 py-8 px-6 md:px-8">
-        <div className="max-w-7xl mx-auto text-center text-sm text-zinc-400">
-          <p>BDC Web - Programmation Informatique (62.01Z). Hébergement Haute Disponibilité.</p>
+        <div className="max-w-7xl mx-auto text-center space-y-3">
+          <p className="text-sm text-zinc-400">BDC Web - Studio de Programmation Premium</p>
+          <p className="text-xs text-zinc-600">
+            BDC Web - Activité principale : Programmation Informatique (NAF 62.01Z). 
+            Ce projet est susceptible d'être cofinancé par l'Union Européenne dans le cadre du programme FEDER-FSE+ Réunion. 
+            L'Europe s'engage à La Réunion avec le fonds FEDER.
+          </p>
         </div>
       </footer>
 

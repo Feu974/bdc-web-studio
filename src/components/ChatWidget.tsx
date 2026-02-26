@@ -38,18 +38,22 @@ export function ChatWidget() {
   const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [initialized, setInitialized] = useState(false)
 
   useEffect(() => {
-    if (messages && messages.length === 0) {
-      const welcomeMessage: Message = {
-        id: Date.now().toString(),
-        text: 'Bonjour ! Je suis l\'assistant virtuel de BDC Web. Comment puis-je vous aider aujourd\'hui ?',
-        sender: 'support',
-        timestamp: Date.now()
+    if (!initialized && messages !== undefined) {
+      if (messages.length === 0) {
+        const welcomeMessage: Message = {
+          id: Date.now().toString(),
+          text: 'Bonjour ! Je suis l\'assistant virtuel de BDC Web. Comment puis-je vous aider aujourd\'hui ?',
+          sender: 'support',
+          timestamp: Date.now()
+        }
+        setMessages([welcomeMessage])
       }
-      setMessages([welcomeMessage])
+      setInitialized(true)
     }
-  }, [])
+  }, [messages, initialized, setMessages])
 
   useEffect(() => {
     if (scrollRef.current) {

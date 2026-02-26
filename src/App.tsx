@@ -7,10 +7,16 @@ import { motion } from 'framer-motion'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
+      
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
+      const scrolled = window.scrollY
+      const progress = (scrolled / scrollHeight) * 100
+      setScrollProgress(progress)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
@@ -88,6 +94,14 @@ function App() {
           <Button className="bg-white text-black hover:bg-zinc-100 font-semibold tracking-tight">
             Vérifier mon éligibilité
           </Button>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-800/50">
+          <motion.div
+            className="h-full bg-white"
+            style={{ width: `${scrollProgress}%` }}
+            initial={{ width: 0 }}
+            transition={{ duration: 0.1, ease: "linear" }}
+          />
         </div>
       </nav>
 

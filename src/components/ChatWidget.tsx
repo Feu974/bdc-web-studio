@@ -1,11 +1,39 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Send, MessageCircle, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
-import { useKV } from '@github/spark/hooks'
+
+// ─── localStorage helper (remplace @github/spark useKV) ─────────────────────
+function useLocalStorage<T>(key: string, initialValue: T): [T, (val: T | ((prev: T) => T)) => void] {
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    try {
+      const item = localStorage.getItem(key)
+      return item ? (JSON.parse(item) as T) : initialValue
+    } catch {
+      return initialValue
+    }
+  })
+
+  const setValue = useCallback(
+    (value: T | ((prev: T) => T)) => {
+      setStoredValue((prev) => {
+        const nextValue = value instanceof Function ? value(prev) : value
+        try {
+          localStorage.setItem(key, JSON.stringify(nextValue))
+        } catch {
+          // quota exceeded — silently fail
+        }
+        return nextValue
+      })
+    },
+    [key],
+  )
+
+  return [storedValue, setValue]
+}
 
 interface Message {
   id: string
@@ -33,7 +61,7 @@ const autoResponses: Record<string, string> = {
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useKV<Message[]>('chat-messages', [])
+  const [messages, setMessages] = useLocalStorage<Message[]>('chat-messages', [])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)

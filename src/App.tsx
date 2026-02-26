@@ -1,22 +1,28 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Code2, ShieldCheck, Zap, ChevronRight } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  })
+  
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
-      
-      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
-      const scrolled = window.scrollY
-      const progress = (scrolled / scrollHeight) * 100
-      setScrollProgress(progress)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
@@ -31,6 +37,33 @@ function App() {
     }
   }
 
+  const fadeInScale = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }
+    }
+  }
+
+  const slideInLeft = {
+    hidden: { opacity: 0, x: -80 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }
+    }
+  }
+
+  const slideInRight = {
+    hidden: { opacity: 0, x: 80 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }
+    }
+  }
+
   const staggerContainer = {
     hidden: { opacity: 0 },
     visible: {
@@ -39,6 +72,16 @@ function App() {
         staggerChildren: 0.15,
         delayChildren: 0.1
       }
+    }
+  }
+
+  const scaleRotate = {
+    hidden: { opacity: 0, scale: 0.8, rotate: -5 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      rotate: 0,
+      transition: { duration: 0.7, ease: [0.34, 1.56, 0.64, 1] as const }
     }
   }
 
@@ -80,7 +123,7 @@ function App() {
   ]
 
   return (
-    <div className="min-h-screen bg-black text-zinc-50">
+    <div ref={containerRef} className="min-h-screen bg-black text-zinc-50">
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? 'bg-black/80 backdrop-blur-md border-b border-zinc-800' : 'bg-transparent'
@@ -98,9 +141,8 @@ function App() {
         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-800/50">
           <motion.div
             className="h-full bg-white"
-            style={{ width: `${scrollProgress}%` }}
-            initial={{ width: 0 }}
-            transition={{ duration: 0.1, ease: "linear" }}
+            style={{ scaleX: smoothProgress, transformOrigin: "0%" }}
+            initial={{ scaleX: 0 }}
           />
         </div>
       </nav>
@@ -109,26 +151,26 @@ function App() {
         className="pt-32 pb-20 md:pt-40 md:pb-32 px-6 md:px-8"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
+        viewport={{ once: true, margin: "-50px" }}
+        variants={staggerContainer}
       >
         <div className="max-w-7xl mx-auto">
           <motion.h1 
             className="text-4xl md:text-6xl font-bold tracking-tighter leading-none mb-6 max-w-4xl"
-            variants={fadeInUp}
+            variants={slideInLeft}
           >
             Ingénierie Web. Sans compromis. Que de la performance.
           </motion.h1>
           <motion.p 
             className="text-lg md:text-xl text-zinc-400 leading-relaxed mb-10 max-w-3xl"
-            variants={fadeInUp}
+            variants={slideInLeft}
           >
             Nous déployons des solutions logicielles et des infrastructures web haute disponibilité.
             Éligible aux dispositifs de financement régionaux.
           </motion.p>
           <motion.div 
             className="flex flex-col sm:flex-row gap-4"
-            variants={fadeInUp}
+            variants={slideInLeft}
           >
             <Button className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-base px-8 py-6">
               Voir les Infrastructures
@@ -148,7 +190,7 @@ function App() {
         className="pb-20 md:pb-32 px-6 md:px-8"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: "-80px" }}
         variants={staggerContainer}
       >
         <div className="max-w-7xl mx-auto">
@@ -158,7 +200,7 @@ function App() {
           >
             <motion.div 
               className="flex flex-col items-start md:px-8 first:pl-0 last:pr-0"
-              variants={fadeInUp}
+              variants={fadeInScale}
             >
               <div className="text-5xl font-bold tracking-tighter mb-2">98/100</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
@@ -167,7 +209,7 @@ function App() {
             </motion.div>
             <motion.div 
               className="flex flex-col items-start md:px-8"
-              variants={fadeInUp}
+              variants={fadeInScale}
             >
               <div className="text-5xl font-bold tracking-tighter mb-2">100%</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
@@ -176,7 +218,7 @@ function App() {
             </motion.div>
             <motion.div 
               className="flex flex-col items-start md:px-8"
-              variants={fadeInUp}
+              variants={fadeInScale}
             >
               <div className="text-5xl font-bold tracking-tighter mb-2">24/7</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
@@ -185,7 +227,7 @@ function App() {
             </motion.div>
             <motion.div 
               className="flex flex-col items-start md:px-8"
-              variants={fadeInUp}
+              variants={fadeInScale}
             >
               <div className="text-5xl font-bold tracking-tighter mb-2">0</div>
               <div className="text-xs uppercase tracking-wide text-zinc-400 font-medium">
@@ -201,7 +243,7 @@ function App() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
+        variants={staggerContainer}
       >
         <div className="max-w-7xl mx-auto">
           <motion.h2 
@@ -217,7 +259,7 @@ function App() {
             {infrastructures.map((project, index) => (
               <motion.div
                 key={index}
-                variants={fadeInUp}
+                variants={index % 2 === 0 ? slideInLeft : slideInRight}
               >
                 <Card
                   className="bg-black border-zinc-800 p-6 md:p-8 hover:border-zinc-700 hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 group"
@@ -264,8 +306,8 @@ function App() {
         className="bg-white text-black py-20 md:py-32 px-6 md:px-8"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
+        viewport={{ once: true, margin: "-120px" }}
+        variants={staggerContainer}
       >
         <div className="max-w-7xl mx-auto">
           <motion.h2 
@@ -284,7 +326,7 @@ function App() {
                 <motion.div 
                   key={index} 
                   className="space-y-4"
-                  variants={fadeInUp}
+                  variants={scaleRotate}
                 >
                   <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
                     <Icon className="w-6 h-6 text-white" />
@@ -303,11 +345,11 @@ function App() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
+        variants={fadeInScale}
       >
         <motion.div 
           className="max-w-4xl mx-auto text-center"
-          variants={fadeInUp}
+          variants={fadeInScale}
         >
           <motion.h2 
             className="text-3xl md:text-5xl font-bold tracking-tight mb-8"

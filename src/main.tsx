@@ -7,12 +7,10 @@ import App from './App.tsx'
 import { ErrorFallback } from './ErrorFallback.tsx'
 
 import "./main.css"
-import "./styles/theme.css"
-import "./index.css"
 
 createRoot(document.getElementById('root')!).render(
   <ErrorBoundary FallbackComponent={ErrorFallback}>
     <App />
-    <Toaster position="top-right" theme="dark" />
+    <Toaster position="top-right" theme="light" />
    </ErrorBoundary>
 )

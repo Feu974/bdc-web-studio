@@ -1,23 +1,25 @@
 import Navbar from '@/components/Navbar'
-import HeroSection from '@/components/HeroSection'
-import MetricsBar from '@/components/MetricsBar'
-import InfrastructuresSection from '@/components/InfrastructuresSection'
-import PricingKapNumerik from '@/components/PricingKapNumerik'
-import ZeroDefectMethodology from '@/components/ZeroDefectMethodology'
-import EligibilityForm from '@/components/EligibilityForm'
-import LegalFooter from '@/components/LegalFooter'
+import HeroSplit from '@/components/HeroSplit'
+import ProofGallery from '@/components/ProofGallery'
+import Metrics from '@/components/Metrics'
+import Offers from '@/components/Offers'
+import Method from '@/components/Method'
+import Form from '@/components/Form'
+import Footer from '@/components/Footer'
 
 function App() {
   return (
-    <div className="min-h-screen bg-black text-zinc-50">
+    <div className="bdc-shell min-h-screen text-[var(--bdc-color-ink)]">
       <Navbar />
-      <HeroSection />
-      <MetricsBar />
-      <InfrastructuresSection />
-      <PricingKapNumerik />
-      <ZeroDefectMethodology />
-      <EligibilityForm />
-      <LegalFooter />
+      <main className="overflow-x-clip">
+        <HeroSplit />
+        <ProofGallery />
+        <Metrics />
+        <Offers />
+        <Method />
+        <Form />
+      </main>
+      <Footer />
     </div>
   )
 }

@@ -260,3 +260,27 @@
     --color-bg-overlay: var(--color-neutral-3);
   }
 }
+@layer base {
+  :root {
+    --bdc-color-bg: #f5f4ef;
+    --bdc-color-surface: #fffdf8;
+    --bdc-color-surface-soft: #efede6;
+    --bdc-color-ink: #141720;
+    --bdc-color-muted: #565d6b;
+    --bdc-color-muted-strong: #313744;
+    --bdc-color-accent: #0f8763;
+    --bdc-hairline: rgba(20, 23, 32, 0.1);
+    --bdc-hairline-strong: rgba(20, 23, 32, 0.17);
+    --bdc-shadow-soft: 0 36px 62px -48px rgba(20, 24, 40, 0.72);
+
+    --bdc-motion-fast: 160ms;
+    --bdc-motion-base: 200ms;
+    --bdc-motion-slow: 220ms;
+    --bdc-ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    --bdc-font-sans: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+    --bdc-font-serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+
+    --bdc-noise-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.24'/%3E%3C/svg%3E");
+  }
+}

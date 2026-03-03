@@ -9,37 +9,53 @@ const scrollToSection = (id: string) => {
 }
 
 const HeroSection: React.FC = () => (
-  <section className="pt-32 pb-20 md:pt-40 md:pb-32 px-6 md:px-8">
-    <div className="max-w-7xl mx-auto">
-      <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-none mb-6 max-w-4xl">
-        L'ingénierie logicielle des{' '}
-        <span className="bg-gradient-to-r from-zinc-300 to-zinc-600 bg-clip-text text-transparent">
-          leaders réunionnais
+  <section className="relative pt-36 pb-24 md:pt-48 md:pb-40 px-6 md:px-8 overflow-hidden">
+    {/* Subtle radial glow — ajoute de la profondeur sans surcharger */}
+    <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-white/[0.02] rounded-full blur-3xl" />
+    </div>
+
+    <div className="relative max-w-7xl mx-auto">
+      {/* Micro-label technique — espacement large, uppercase */}
+      <p className="text-xs tracking-widest uppercase text-zinc-500 font-medium mb-6">
+        Studio d'ingenierie logicielle — La Reunion
+      </p>
+
+      <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] mb-8 max-w-5xl text-zinc-100">
+        L'ingenierie logicielle des{' '}
+        <span className="bg-gradient-to-r from-zinc-100 via-zinc-400 to-zinc-600 bg-clip-text text-transparent">
+          leaders reunionnais
         </span>
         .
       </h1>
-      <p className="text-lg md:text-xl text-zinc-400 leading-relaxed mb-10 max-w-3xl">
-        Nous déployons des infrastructures web haute performance. Code propriétaire, sécurité renforcée,
-        et jusqu'à 3 200 € de prise en charge via Kap Numérik (selon éligibilité).
+
+      <p className="text-lg md:text-xl text-zinc-400 leading-relaxed mb-12 max-w-2xl">
+        Nous deployons des infrastructures web haute performance. Code proprietaire, securite renforcee,
+        et jusqu'a 3 200 EUR de prise en charge via Kap Numerik (selon eligibilite).
       </p>
-      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+
+      <div className="flex flex-col sm:flex-row gap-4 mb-10">
+        {/* CTA Primaire — bg-white, seul element qui saute aux yeux */}
         <Button
           onClick={() => scrollToSection('eligibilite')}
-          className="bg-white text-black hover:bg-zinc-100 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-base px-8 py-6"
+          className="bg-white text-black hover:bg-zinc-200 transition-colors duration-300 font-medium text-base px-8 py-6 rounded-lg"
         >
           Demander un audit technique
           <ChevronRight className="ml-2 h-5 w-5" />
         </Button>
+
+        {/* CTA Secondaire — fantome, bordure subtile */}
         <Button
           onClick={() => scrollToSection('infrastructures')}
           variant="outline"
-          className="bg-black text-white border-zinc-800 hover:bg-zinc-900 hover:border-zinc-700 hover:scale-[1.02] transition-all duration-300 font-semibold tracking-tight text-base px-8 py-6"
+          className="bg-transparent border border-white/20 text-white hover:bg-white/5 hover:border-white/30 transition-all duration-300 font-medium text-base px-8 py-6 rounded-lg"
         >
           Voir les architectures
         </Button>
       </div>
-      <p className="text-xs text-zinc-500 max-w-xl">
-        Audit orienté performance / sécurité. Réponse 24–48h. Sans engagement.
+
+      <p className="text-xs tracking-wide text-zinc-600">
+        Audit oriente performance / securite. Reponse 24-48h. Sans engagement.
       </p>
     </div>
   </section>

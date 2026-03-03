@@ -1,10 +1,10 @@
 import type { LegalMentions } from '@/types/business'
 
-// ─── Données légales (source unique de vérité) ──────────────────────────────
+// --- Donnees legales (source unique de verite) ---
 
 const LEGAL: LegalMentions = {
   federNotice:
-    'Ce projet a été financé par l\'Union Européenne dans le cadre du programme FEDER-FSE+ Réunion dont l\'Autorité de gestion est la Région Réunion. L\'Europe s\'engage à La Réunion avec le fonds FEDER.',
+    "Ce projet a ete finance par l'Union Europeenne dans le cadre du programme FEDER-FSE+ Reunion dont l'Autorite de gestion est la Region Reunion. L'Europe s'engage a La Reunion avec le fonds FEDER.",
   nafActivity: 'Programmation Informatique',
   nafCode: '62.01Z',
   companyName: 'BDC Web',
@@ -23,47 +23,47 @@ interface FooterLink {
 }
 
 const FOOTER_LINKS: FooterLink[] = [
-  { label: 'Tarifs Kap Numérik', sectionId: 'kap-numerik' },
-  { label: 'Méthode Zéro Défaut', sectionId: 'zero-defaut' },
-  { label: 'Vérifier mon éligibilité', sectionId: 'eligibilite' },
+  { label: 'Tarifs Kap Numerik', sectionId: 'kap-numerik' },
+  { label: 'Methode Zero Defaut', sectionId: 'zero-defaut' },
+  { label: 'Verifier mon eligibilite', sectionId: 'eligibilite' },
 ]
 
-// ─── Composant ───────────────────────────────────────────────────────────────
+// --- Composant ---
 
 const LegalFooter: React.FC = () => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-black border-t border-zinc-800 py-12 px-6 md:px-8" role="contentinfo">
+    <footer className="bg-zinc-950 border-t border-white/10 py-14 px-6 md:px-8" role="contentinfo">
       <div className="max-w-7xl mx-auto">
         {/* Grille 3 colonnes */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mb-10">
-          {/* Col 1 — Identité */}
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 mb-12">
+          {/* Col 1 — Identite */}
           <div>
             <div className="flex items-center gap-1.5 mb-4">
-              <span className="text-lg font-bold tracking-tight text-white">BDC.</span>
+              <span className="text-lg font-bold tracking-tight text-zinc-100">BDC.</span>
               <span className="w-1.5 h-1.5 bg-white rounded-sm"></span>
             </div>
-            <p className="text-sm text-zinc-400 leading-relaxed mb-3">
-              Studio de développement spécialisé en ingénierie logicielle,
-              déploiement et maintien en condition opérationnelle.
+            <p className="text-sm text-zinc-500 leading-relaxed mb-3">
+              Studio de developpement specialise en ingenierie logicielle,
+              deploiement et maintien en condition operationnelle.
             </p>
-            <p className="text-xs text-zinc-600">
-              Activité principale : {LEGAL.nafActivity} (NAF {LEGAL.nafCode})
+            <p className="text-xs text-zinc-700">
+              Activite principale : {LEGAL.nafActivity} (NAF {LEGAL.nafCode})
             </p>
           </div>
 
           {/* Col 2 — Navigation */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-300 mb-4">
+            <h3 className="text-xs tracking-widest uppercase text-zinc-500 font-medium mb-4">
               Navigation
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2.5">
               {FOOTER_LINKS.map((link) => (
                 <li key={link.sectionId}>
                   <button
                     onClick={() => scrollToSection(link.sectionId)}
-                    className="text-sm text-zinc-400 hover:text-white transition-colors duration-300"
+                    className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300"
                   >
                     {link.label}
                   </button>
@@ -74,10 +74,10 @@ const LegalFooter: React.FC = () => {
 
           {/* Col 3 — Mention FEDER obligatoire */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-300 mb-4">
-              Financement européen
+            <h3 className="text-xs tracking-widest uppercase text-zinc-500 font-medium mb-4">
+              Financement europeen
             </h3>
-            <div className="rounded-lg border border-emerald-400/20 bg-emerald-500/5 p-4">
+            <div className="rounded-xl border border-emerald-400/20 bg-emerald-500/5 p-4">
               <p className="text-xs leading-relaxed text-emerald-400/80">
                 {LEGAL.federNotice}
               </p>
@@ -86,10 +86,10 @@ const LegalFooter: React.FC = () => {
         </div>
 
         {/* Barre de copyright */}
-        <hr className="border-zinc-800 mb-6" />
-        <div className="flex flex-col items-center justify-between gap-4 text-xs text-zinc-600 sm:flex-row">
-          <p>© {currentYear} {LEGAL.companyName} — Studio de développement. Tous droits réservés.</p>
-          <p>Activité principale : {LEGAL.nafActivity} (NAF {LEGAL.nafCode})</p>
+        <hr className="border-white/10 mb-6" />
+        <div className="flex flex-col items-center justify-between gap-4 text-xs text-zinc-700 sm:flex-row">
+          <p>&copy; {currentYear} {LEGAL.companyName} — Studio de developpement. Tous droits reserves.</p>
+          <p>Activite principale : {LEGAL.nafActivity} (NAF {LEGAL.nafCode})</p>
         </div>
       </div>
     </footer>

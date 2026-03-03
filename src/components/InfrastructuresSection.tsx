@@ -14,49 +14,52 @@ const CARDS: InfrastructureCard[] = [
   {
     icon: 'zap',
     title: 'Performance',
-    description: 'Budget de performance alloué à chaque projet. Temps de chargement optimisés.',
+    description: 'Budget de performance alloue a chaque projet. Temps de chargement optimises.',
     features: [
       'Images format next-gen (WebP/AVIF)',
-      'Mise en cache stratégique',
+      'Mise en cache strategique',
       'Code splitting et lazy loading',
     ],
   },
   {
     icon: 'shield',
-    title: 'Sécurité',
-    description: 'Durcissement de sécurité appliqué systématiquement. Protection multi-couches.',
+    title: 'Securite',
+    description: 'Durcissement de securite applique systematiquement. Protection multi-couches.',
     features: [
       'Certificat SSL Grade A minimum',
-      'Protection anti-spam avancée',
-      'Headers de sécurité HTTP configurés',
+      'Protection anti-spam avancee',
+      'Headers de securite HTTP configures',
     ],
   },
   {
     icon: 'code',
-    title: 'Code propriétaire',
-    description: "Pas de template pré-fabriqué. Développement sur mesure, vous en êtes propriétaire.",
+    title: 'Code proprietaire',
+    description: "Pas de template pre-fabrique. Developpement sur mesure, vous en etes proprietaire.",
     features: [
-      'Accès complet au repository Git',
-      'Transfert de propriété documenté',
-      'Code maintenable et documenté',
+      'Acces complet au repository Git',
+      'Transfert de propriete documente',
+      'Code maintenable et documente',
     ],
   },
   {
     icon: 'server',
-    title: 'Disponibilité',
-    description: "Infrastructure surveillée en continu. Interventions rapides en cas d'incident.",
+    title: 'Disponibilite',
+    description: "Infrastructure surveillee en continu. Interventions rapides en cas d'incident.",
     features: [
       'Monitoring proactif 24/7',
-      'Sauvegardes automatisées quotidiennes',
-      'Procédure de rollback immédiate',
+      'Sauvegardes automatisees quotidiennes',
+      'Procedure de rollback immediate',
     ],
   },
 ]
 
 const InfrastructuresSection: React.FC = () => (
-  <section id="infrastructures" className="bg-black py-20 md:py-32 px-6 md:px-8">
+  <section id="infrastructures" className="bg-zinc-950 py-24 md:py-36 px-6 md:px-8">
     <div className="max-w-7xl mx-auto">
-      <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-12">
+      <p className="text-xs tracking-widest uppercase text-zinc-500 font-medium mb-4">
+        Architecture technique
+      </p>
+      <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-16 text-zinc-100">
         Infrastructures.
       </h2>
       <div className="grid md:grid-cols-2 gap-6">
@@ -65,23 +68,23 @@ const InfrastructuresSection: React.FC = () => (
           return (
             <Card
               key={card.title}
-              className="bg-zinc-950 border-zinc-800 p-6 md:p-8 hover:border-zinc-700 transition-all duration-300 group"
+              className="bg-white/[0.03] border-white/10 p-6 md:p-8 hover:border-white/20 transition-all duration-300 group"
             >
               <div className="flex items-start justify-between mb-6">
-                <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center border border-zinc-800">
-                  <IconComponent className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 bg-white/[0.05] rounded-xl flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-colors duration-300">
+                  <IconComponent className="w-6 h-6 text-zinc-300" />
                 </div>
-                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium">
+                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs">
                   Standard BDC
                 </Badge>
               </div>
-              <h3 className="text-xl font-bold mb-3">{card.title}</h3>
-              <p className="text-sm text-zinc-400 mb-4">{card.description}</p>
-              <ul className="space-y-2 text-sm text-zinc-400">
+              <h3 className="text-xl font-bold tracking-tight mb-3 text-zinc-100">{card.title}</h3>
+              <p className="text-sm text-zinc-500 mb-5">{card.description}</p>
+              <ul className="space-y-2.5 text-sm">
                 {card.features.map((feat) => (
-                  <li key={feat} className="flex items-start gap-2">
+                  <li key={feat} className="flex items-start gap-2.5">
                     <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <span>{feat}</span>
+                    <span className="text-zinc-400">{feat}</span>
                   </li>
                 ))}
               </ul>

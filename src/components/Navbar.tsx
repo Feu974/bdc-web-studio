@@ -35,6 +35,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
+      aria-label="Navigation principale"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
           ? 'bg-zinc-950/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20'
@@ -44,21 +45,27 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-8 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-1.5">
+          <a
+            href="#contenu-principal"
+            className="flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded"
+            role="img"
+            aria-label="BDC Web — Accueil"
+          >
             <span className="text-xl font-bold tracking-tight text-zinc-100">BDC.</span>
-            <span className="w-1.5 h-1.5 bg-white rounded-sm"></span>
-          </div>
+            <span className="w-1.5 h-1.5 bg-white rounded-sm" aria-hidden="true"></span>
+          </a>
 
           {/* Nav links desktop */}
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
-              <button
+              <a
                 key={link.sectionId}
-                onClick={() => scrollToSection(link.sectionId)}
-                className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300"
+                href={`#${link.sectionId}`}
+                onClick={(e) => { e.preventDefault(); scrollToSection(link.sectionId); }}
+                className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
               >
                 {link.label}
-              </button>
+              </a>
             ))}
           </div>
 
@@ -73,25 +80,29 @@ const Navbar: React.FC = () => {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-zinc-300 hover:text-white transition-colors"
+              className="md:hidden text-zinc-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded"
               aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <Menu className="w-6 h-6" aria-hidden="true" />}
             </button>
           </div>
         </div>
 
         {/* Menu mobile — glassmorphism */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-white/10 space-y-4">
+          <div id="mobile-menu" className="md:hidden mt-4 pt-4 border-t border-white/10 space-y-4" role="menu">
             {NAV_LINKS.map((link) => (
-              <button
+              <a
                 key={link.sectionId}
-                onClick={() => scrollToSection(link.sectionId)}
-                className="block w-full text-left text-zinc-400 hover:text-zinc-100 transition-colors duration-300 py-2"
+                href={`#${link.sectionId}`}
+                role="menuitem"
+                onClick={(e) => { e.preventDefault(); scrollToSection(link.sectionId); }}
+                className="block w-full text-left text-zinc-400 hover:text-zinc-100 transition-colors duration-300 py-2 focus:outline-none focus:ring-2 focus:ring-white rounded px-1"
               >
                 {link.label}
-              </button>
+              </a>
             ))}
             <Button
               onClick={() => scrollToSection('eligibilite')}

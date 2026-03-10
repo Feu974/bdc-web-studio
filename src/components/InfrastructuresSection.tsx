@@ -72,7 +72,7 @@ const InfrastructuresSection: React.FC = () => (
             >
               <div className="flex items-start justify-between mb-6">
                 <div className="w-12 h-12 bg-white/[0.05] rounded-xl flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-colors duration-300">
-                  <IconComponent className="w-6 h-6 text-zinc-300" />
+                  <IconComponent className="w-6 h-6 text-zinc-300" aria-hidden="true" />
                 </div>
                 <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs">
                   Standard BDC
@@ -83,7 +83,7 @@ const InfrastructuresSection: React.FC = () => (
               <ul className="space-y-2.5 text-sm">
                 {card.features.map((feat) => (
                   <li key={feat} className="flex items-start gap-2.5">
-                    <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
                     <span className="text-zinc-400">{feat}</span>
                   </li>
                 ))}

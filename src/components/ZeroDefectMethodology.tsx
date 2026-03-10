@@ -8,26 +8,26 @@ interface MethodStep {
 
 const STEPS: MethodStep[] = [
   {
-    icon: <Zap className="w-6 h-6 text-zinc-900" />,
+    icon: <Zap className="w-6 h-6 text-white" aria-hidden="true" />,
     title: 'Performance extreme',
     description:
       'Budget de performance alloue. Audit Lighthouse systematique. Latence optimisee, architecture Edge.',
   },
   {
-    icon: <ShieldCheck className="w-6 h-6 text-zinc-900" />,
+    icon: <ShieldCheck className="w-6 h-6 text-white" aria-hidden="true" />,
     title: 'QA bloquante',
     description:
       '7 criteres bloquants valides avant toute mise en production. Aucune exception. PASS ou FAIL.',
   },
   {
-    icon: <Server className="w-6 h-6 text-zinc-900" />,
+    icon: <Server className="w-6 h-6 text-white" aria-hidden="true" />,
     title: 'Procedure Kap Numerik',
     description:
       'Sequence obligatoire respectee. Montage administratif complet. Friction reduite au minimum.',
   },
 ]
 
-const PIPELINE = ['1. Audit', '2. Specification', '3. Deploiement', '4. Monitoring']
+const PIPELINE = ['Audit', 'Specification', 'Deploiement', 'Monitoring']
 
 const ZeroDefectMethodology: React.FC = () => (
   <section id="zero-defaut" className="bg-zinc-50 text-zinc-900 py-32 md:py-40 px-6 md:px-8">
@@ -54,18 +54,18 @@ const ZeroDefectMethodology: React.FC = () => (
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-3 justify-center">
+      <ol className="flex flex-wrap gap-3 justify-center list-none p-0 m-0" aria-label="Pipeline de deploiement">
         {PIPELINE.map((label, index) => (
-          <div key={label} className="flex items-center gap-3">
+          <li key={label} className="flex items-center gap-3">
             <div className="px-5 py-2.5 bg-zinc-900 text-white rounded-full text-sm font-medium tracking-tight">
-              {label}
+              {index + 1}. {label}
             </div>
             {index < PIPELINE.length - 1 && (
-              <ChevronRight className="w-5 h-5 text-zinc-300" />
+              <ChevronRight className="w-5 h-5 text-zinc-300" aria-hidden="true" />
             )}
-          </div>
+          </li>
         ))}
-      </div>
+      </ol>
     </div>
   </section>
 )

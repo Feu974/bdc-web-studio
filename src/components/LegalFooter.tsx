@@ -34,15 +34,15 @@ const LegalFooter: React.FC = () => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-zinc-950 border-t border-white/10 py-14 px-6 md:px-8" role="contentinfo">
+    <footer className="bg-zinc-950 border-t border-white/10 py-14 px-6 md:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Grille 3 colonnes */}
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 mb-12">
           {/* Col 1 — Identite */}
           <div>
-            <div className="flex items-center gap-1.5 mb-4">
+            <div className="flex items-center gap-1.5 mb-4" aria-hidden="true">
               <span className="text-lg font-bold tracking-tight text-zinc-100">BDC.</span>
-              <span className="w-1.5 h-1.5 bg-white rounded-sm"></span>
+              <span className="w-1.5 h-1.5 bg-white rounded-sm" aria-hidden="true"></span>
             </div>
             <p className="text-sm text-zinc-500 leading-relaxed mb-3">
               Studio de developpement specialise en ingenierie logicielle,
@@ -54,23 +54,24 @@ const LegalFooter: React.FC = () => {
           </div>
 
           {/* Col 2 — Navigation */}
-          <div>
+          <nav aria-label="Liens du pied de page">
             <h3 className="text-xs tracking-widest uppercase text-zinc-500 font-medium mb-4">
               Navigation
             </h3>
             <ul className="space-y-2.5">
               {FOOTER_LINKS.map((link) => (
                 <li key={link.sectionId}>
-                  <button
-                    onClick={() => scrollToSection(link.sectionId)}
-                    className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300"
+                  <a
+                    href={`#${link.sectionId}`}
+                    onClick={(e) => { e.preventDefault(); scrollToSection(link.sectionId); }}
+                    className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
                   >
                     {link.label}
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Col 3 — Mention FEDER obligatoire */}
           <div className="sm:col-span-2 lg:col-span-1">
@@ -78,7 +79,7 @@ const LegalFooter: React.FC = () => {
               Financement europeen
             </h3>
             <div className="rounded-xl border border-emerald-400/20 bg-emerald-500/5 p-4">
-              <p className="text-xs leading-relaxed text-emerald-400/80">
+              <p className="text-xs leading-relaxed text-emerald-300">
                 {LEGAL.federNotice}
               </p>
             </div>
@@ -87,7 +88,7 @@ const LegalFooter: React.FC = () => {
 
         {/* Barre de copyright */}
         <hr className="border-white/10 mb-6" />
-        <div className="flex flex-col items-center justify-between gap-4 text-xs text-zinc-700 sm:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 text-xs text-zinc-600 sm:flex-row">
           <p>&copy; {currentYear} {LEGAL.companyName} — Studio de developpement. Tous droits reserves.</p>
           <p>Activite principale : {LEGAL.nafActivity} (NAF {LEGAL.nafCode})</p>
         </div>

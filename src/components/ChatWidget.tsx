@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { X, Send, MessageCircle, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
 
-// ─── localStorage helper (remplace @github/spark useKV) ─────────────────────
+// ─── localStorage helper ────────────────────────────────────────────────────
 function useLocalStorage<T>(key: string, initialValue: T): [T, (val: T | ((prev: T) => T)) => void] {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
@@ -59,15 +58,26 @@ const autoResponses: Record<string, string> = {
   'sécurité': 'Toutes nos infrastructures incluent SSL Grade A, anti-DDoS, et sauvegardes automatisées quotidiennes.'
 }
 
+const CHAT_TITLE_ID = 'chat-dialog-title'
+
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useLocalStorage<Message[]>('chat-messages', [])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const openButtonRef = useRef<HTMLButtonElement>(null)
   const [unreadCount, setUnreadCount] = useState(0)
   const [initialized, setInitialized] = useState(false)
+  const prefersReducedMotion = useReducedMotion()
 
+  const motionProps = prefersReducedMotion
+    ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.01 } }
+    : undefined
+
+  // Welcome message
   useEffect(() => {
     if (!initialized && messages !== undefined) {
       if (messages.length === 0) {
@@ -83,15 +93,16 @@ export function ChatWidget() {
     }
   }, [messages, initialized, setMessages])
 
+  // Auto-scroll on new messages
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
   }, [messages, isTyping])
 
+  // Unread count management
   useEffect(() => {
     if (!messages) return
-    
     if (!isOpen) {
       const newMessages = messages.filter(m => m.sender === 'support')
       if (newMessages.length > 0) {
@@ -110,6 +121,49 @@ export function ChatWidget() {
       })
     }
   }, [isOpen, messages])
+
+  // Focus trap + Escape key for dialog
+  useEffect(() => {
+    if (!isOpen) return
+
+    // Focus input on open
+    requestAnimationFrame(() => {
+      inputRef.current?.focus()
+    })
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false)
+        // Return focus to open button
+        requestAnimationFrame(() => {
+          openButtonRef.current?.focus()
+        })
+        return
+      }
+
+      // Focus trap
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+        if (focusableElements.length === 0) return
+
+        const firstEl = focusableElements[0]
+        const lastEl = focusableElements[focusableElements.length - 1]
+
+        if (e.shiftKey && document.activeElement === firstEl) {
+          e.preventDefault()
+          lastEl.focus()
+        } else if (!e.shiftKey && document.activeElement === lastEl) {
+          e.preventDefault()
+          firstEl.focus()
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen])
 
   const getAutoResponse = (text: string): string | null => {
     const lowerText = text.toLowerCase()
@@ -137,7 +191,7 @@ export function ChatWidget() {
 
     setTimeout(() => {
       const autoResponse = getAutoResponse(text)
-      const responseText = autoResponse || 
+      const responseText = autoResponse ||
         'Merci pour votre message. Un membre de notre équipe technique va vous répondre dans quelques instants.'
 
       const supportMessage: Message = {
@@ -163,25 +217,31 @@ export function ChatWidget() {
 
   return (
     <>
+      {/* Open chat button */}
       <AnimatePresence>
         {!isOpen && (
           <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            {...(prefersReducedMotion
+              ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.01 } }
+              : { initial: { scale: 0, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0, opacity: 0 }, transition: { type: "spring", stiffness: 260, damping: 20 } }
+            )}
             className="fixed bottom-6 right-6 z-50"
           >
             <Button
+              ref={openButtonRef}
               onClick={() => setIsOpen(true)}
-              className="relative h-16 w-16 rounded-full bg-white text-black hover:bg-zinc-100 shadow-2xl hover:scale-110 transition-all duration-300"
+              aria-label={unreadCount > 0 ? `Ouvrir le chat (${unreadCount} message${unreadCount > 1 ? 's' : ''} non lu${unreadCount > 1 ? 's' : ''})` : 'Ouvrir le chat'}
+              className="relative h-16 w-16 rounded-full bg-white text-black hover:bg-zinc-100 shadow-2xl hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
             >
-              <MessageCircle className="h-7 w-7" />
+              <MessageCircle className="h-7 w-7" aria-hidden="true" />
               {unreadCount > 0 && (
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                  {...(prefersReducedMotion
+                    ? { initial: false, animate: { opacity: 1 } }
+                    : { initial: { scale: 0 }, animate: { scale: 1 } }
+                  )}
                   className="absolute -top-1 -right-1 h-6 w-6 bg-accent rounded-full flex items-center justify-center text-white text-xs font-bold"
+                  aria-hidden="true"
                 >
                   {unreadCount}
                 </motion.div>
@@ -191,46 +251,54 @@ export function ChatWidget() {
         )}
       </AnimatePresence>
 
+      {/* Chat dialog */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={CHAT_TITLE_ID}
+            {...(prefersReducedMotion
+              ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.01 } }
+              : { initial: { opacity: 0, y: 20, scale: 0.95 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0, y: 20, scale: 0.95 }, transition: { type: "spring", stiffness: 300, damping: 30 } }
+            )}
             className="fixed bottom-6 right-6 w-[380px] h-[600px] bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
+            {/* Header */}
             <div className="bg-black border-b border-zinc-800 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center">
-                  <User className="h-5 w-5 text-black" />
+                <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center" aria-hidden="true">
+                  <User className="h-5 w-5 text-black" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">Support BDC Web</h3>
+                  <h3 id={CHAT_TITLE_ID} className="font-bold text-sm">Support BDC Web</h3>
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
+                    <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" aria-hidden="true" />
                     <span className="text-xs text-zinc-400">En ligne</span>
                   </div>
                 </div>
               </div>
               <Button
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false)
+                  requestAnimationFrame(() => openButtonRef.current?.focus())
+                }}
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-900"
+                aria-label="Fermer le chat"
+                className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-0 rounded"
               >
-                <X className="h-5 w-5" />
+                <X className="h-5 w-5" aria-hidden="true" />
               </Button>
             </div>
 
+            {/* Messages area */}
             <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-              <div className="space-y-4">
-                {messages && messages.map((message, index) => (
-                  <motion.div
+              <div className="space-y-4" role="log" aria-live="polite" aria-label="Messages du chat">
+                {messages && messages.map((message) => (
+                  <div
                     key={message.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
                     className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
@@ -241,57 +309,48 @@ export function ChatWidget() {
                       }`}
                     >
                       <p className="text-sm leading-relaxed">{message.text}</p>
-                      <span className="text-xs opacity-50 mt-1 block">
+                      <span className="text-xs opacity-50 mt-1 block" aria-label={`Envoye a ${formatTime(message.timestamp)}`}>
                         {formatTime(message.timestamp)}
                       </span>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
 
                 {isTyping && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                  <div
                     className="flex justify-start"
+                    role="status"
+                    aria-label="L'assistant ecrit..."
                   >
                     <div className="bg-zinc-900 rounded-2xl px-4 py-3">
-                      <div className="flex gap-1">
-                        <motion.div
-                          animate={{ y: [0, -8, 0] }}
-                          transition={{ repeat: Infinity, duration: 0.6, delay: 0 }}
-                          className="h-2 w-2 bg-zinc-500 rounded-full"
-                        />
-                        <motion.div
-                          animate={{ y: [0, -8, 0] }}
-                          transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }}
-                          className="h-2 w-2 bg-zinc-500 rounded-full"
-                        />
-                        <motion.div
-                          animate={{ y: [0, -8, 0] }}
-                          transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }}
-                          className="h-2 w-2 bg-zinc-500 rounded-full"
-                        />
+                      <div className="flex gap-1" aria-hidden="true">
+                        <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '200ms' }} />
+                        <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '400ms' }} />
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 )}
               </div>
             </ScrollArea>
 
+            {/* Quick replies — proper buttons */}
             {messages && messages.length <= 2 && (
-              <div className="px-4 pb-3 flex flex-wrap gap-2">
+              <div className="px-4 pb-3 flex flex-wrap gap-2" role="group" aria-label="Reponses rapides">
                 {quickReplies.map((reply) => (
-                  <Badge
+                  <button
                     key={reply}
+                    type="button"
                     onClick={() => handleQuickReply(reply)}
-                    className="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 cursor-pointer border border-zinc-800 hover:border-zinc-700 transition-all duration-200"
+                    className="inline-flex items-center px-3 py-1 text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-300 cursor-pointer border border-zinc-800 hover:border-zinc-700 transition-all duration-200 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-zinc-950"
                   >
                     {reply}
-                  </Badge>
+                  </button>
                 ))}
               </div>
             )}
 
+            {/* Input area */}
             <div className="border-t border-zinc-800 p-4 bg-black">
               <form
                 onSubmit={(e) => {
@@ -301,17 +360,20 @@ export function ChatWidget() {
                 className="flex gap-2"
               >
                 <Input
+                  ref={inputRef}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Votre message..."
+                  aria-label="Votre message"
                   className="flex-1 bg-zinc-900 border-zinc-800 text-zinc-50 placeholder:text-zinc-500 focus:border-accent"
                 />
                 <Button
                   type="submit"
                   disabled={!inputValue.trim() || isTyping}
-                  className="bg-white text-black hover:bg-zinc-100 hover:scale-105 transition-all duration-200"
+                  aria-label="Envoyer le message"
+                  className="bg-white text-black hover:bg-zinc-100 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </form>
             </div>

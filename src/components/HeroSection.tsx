@@ -11,7 +11,7 @@ const scrollToSection = (id: string) => {
 const HeroSection: React.FC = () => (
   <section className="relative pt-36 pb-24 md:pt-48 md:pb-40 px-6 md:px-8 overflow-hidden">
     {/* Subtle radial glow — ajoute de la profondeur sans surcharger */}
-    <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-white/[0.02] rounded-full blur-3xl" />
     </div>
 

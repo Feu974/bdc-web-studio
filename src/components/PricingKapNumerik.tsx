@@ -44,7 +44,7 @@ const PriceBreakdown: React.FC<PriceBreakdownProps> = ({ plan }) => (
     {/* Prix de base barre */}
     <div className="flex items-center justify-between">
       <span className="text-sm text-zinc-500">Prix de base</span>
-      <span className="text-lg font-bold text-zinc-600 line-through">
+      <span className="text-lg font-bold text-zinc-600 line-through" aria-label={`Prix de base avant prise en charge : ${plan.basePriceHT.toLocaleString('fr-FR')} euros hors taxes`}>
         {plan.basePriceHT.toLocaleString('fr-FR')} EUR HT
       </span>
     </div>
@@ -83,7 +83,7 @@ const MaintenanceCardComponent: React.FC<MaintenanceCardProps> = ({ contract }) 
     <div className="mb-6">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Shield className="h-5 w-5 text-emerald-400" />
+          <Shield className="h-5 w-5 text-emerald-400" aria-hidden="true" />
           <h3 className="text-2xl font-bold tracking-tight text-zinc-100">{contract.name}</h3>
         </div>
         <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs">
@@ -101,7 +101,7 @@ const MaintenanceCardComponent: React.FC<MaintenanceCardProps> = ({ contract }) 
     <div className="space-y-3 mb-8">
       {contract.services.map((service) => (
         <div key={service} className="flex items-start gap-3">
-          <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+          <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
           <span className="text-sm text-zinc-400">{service}</span>
         </div>
       ))}
@@ -166,7 +166,7 @@ const PricingKapNumerik: React.FC = () => {
             <div className="space-y-3 mb-8">
               {plan.features.map((feat) => (
                 <div key={feat.label} className="flex items-start gap-3">
-                  <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
                   <span className="text-sm text-zinc-400">{feat.label}</span>
                 </div>
               ))}

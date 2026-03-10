@@ -22,16 +22,16 @@ const HeroSection: React.FC = () => (
       </p>
 
       <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] mb-8 max-w-5xl text-zinc-100">
-        L'ingenierie logicielle des{' '}
-        <span className="bg-gradient-to-r from-zinc-100 via-zinc-400 to-zinc-600 bg-clip-text text-transparent">
-          leaders reunionnais
+        Votre site pro des{' '}
+        <span className="bg-gradient-to-r from-emerald-400 via-emerald-300 to-zinc-100 bg-clip-text text-transparent">
+          240 EUR
         </span>
         .
       </h1>
 
       <p className="text-lg md:text-xl text-zinc-400 leading-relaxed mb-12 max-w-2xl">
-        Nous deployons des infrastructures web haute performance. Code proprietaire, securite renforcee,
-        et jusqu'a 3 200 EUR de prise en charge via Kap Numerik (selon eligibilite).
+        Grace au dispositif Kap Numerik, la Region finance jusqu'a 80 % de votre site internet.
+        Trois formules adaptees a votre activite, de 240 a 800 EUR de reste a charge.
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-10">
@@ -40,22 +40,22 @@ const HeroSection: React.FC = () => (
           onClick={() => scrollToSection('eligibilite')}
           className="bg-white text-black hover:bg-zinc-200 transition-colors duration-300 font-medium text-base px-8 py-6 rounded-lg"
         >
-          Demander un audit technique
+          Verifier mon eligibilite
           <ChevronRight className="ml-2 h-5 w-5" />
         </Button>
 
         {/* CTA Secondaire — fantome, bordure subtile */}
         <Button
-          onClick={() => scrollToSection('infrastructures')}
+          onClick={() => scrollToSection('kap-numerik')}
           variant="outline"
           className="bg-transparent border border-white/20 text-white hover:bg-white/5 hover:border-white/30 transition-all duration-300 font-medium text-base px-8 py-6 rounded-lg"
         >
-          Voir les architectures
+          Decouvrir nos offres
         </Button>
       </div>
 
       <p className="text-xs tracking-wide text-zinc-600">
-        Audit oriente performance / securite. Reponse 24-48h. Sans engagement.
+        Reponse sous 24-48h. Sans engagement. Eligible TPE La Reunion.
       </p>
     </div>
   </section>

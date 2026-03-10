@@ -2,9 +2,9 @@ import { Star } from 'lucide-react'
 import type { Metric } from '@/types/business'
 
 const METRICS: Metric[] = [
-  { value: '98/100', label: 'Score Lighthouse', disclaimer: '(objectif interne)' },
+  { value: 'Des 240 EUR', label: 'Reste a Charge', disclaimer: '(Pack Presence Pro, selon eligibilite)' },
   { value: '5 Jours', label: 'Delai de Deploiement', disclaimer: '(perimetre standard)' },
-  { value: '3 200 EUR', label: 'Plafond Kap Numerik', disclaimer: '(selon eligibilite)' },
+  { value: '3 200 EUR', label: 'Plafond Kap Numerik', disclaimer: '(prise en charge FEDER 80 %)' },
   { value: '100%', label: 'Propriete du Code', disclaimer: '(cession apres paiement complet)' },
 ]
 
@@ -17,15 +17,15 @@ const MetricsBar: React.FC = () => (
           <div key={metric.label} className="flex flex-col items-start md:px-8 first:pl-0 last:pr-0">
             <div
               className={`text-4xl md:text-5xl font-bold tracking-tighter mb-3 flex items-center gap-2 ${
-                index === 2 ? 'text-emerald-400' : 'text-zinc-100'
+                index === 0 ? 'text-emerald-400' : 'text-zinc-100'
               }`}
             >
-              {index === 2 && <Star className="w-5 h-5 text-emerald-400 flex-shrink-0" aria-hidden="true" />}
+              {index === 0 && <Star className="w-5 h-5 text-emerald-400 flex-shrink-0" aria-hidden="true" />}
               {metric.value}
             </div>
             <div className="text-xs tracking-widest uppercase text-zinc-500 font-medium">
               {metric.label}
-              {index === 2 && <span className="sr-only"> — metrique mise en avant</span>}
+              {index === 0 && <span className="sr-only"> — metrique mise en avant</span>}
             </div>
             {metric.disclaimer && (
               <div className="text-xs text-zinc-700 mt-1">{metric.disclaimer}</div>

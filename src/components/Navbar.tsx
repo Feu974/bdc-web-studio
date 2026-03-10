@@ -8,9 +8,9 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
+  { label: 'Nos offres', sectionId: 'kap-numerik' },
   { label: 'Infrastructures', sectionId: 'infrastructures' },
   { label: 'Methode Zero Defaut', sectionId: 'zero-defaut' },
-  { label: 'Kap Numerik', sectionId: 'kap-numerik' },
 ]
 
 const Navbar: React.FC = () => {

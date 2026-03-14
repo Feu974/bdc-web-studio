@@ -1,7 +1,7 @@
 # BDC Web Studio — Design System
 
-> **Version** : 1.0.0
-> **Date** : 2026-03-11
+> **Version** : 1.2.0
+> **Date** : 2026-03-14
 > **Stack** : React 19 · Vite 7 · Tailwind CSS 4 · Radix UI / shadcn · Lucide Icons
 > **Scope** : Landing page Kap Numerik — site vitrine TPE La Reunion
 
@@ -40,7 +40,7 @@ Le site est dark-mode-first. Un seul mecanisme actif :
 - `:root` dans `index.css` — valeurs sombres par defaut (OKLCH)
 - `.dark` dans `main.css` — overrides shadcn (conserve pour compatibilite shadcn)
 
-**Historique** : Les mecanismes `.dark-theme` (Radix) et `#spark-app` (Spark) ont ete supprimes car orphelins (aucun element correspondant dans le DOM). Les composants codent directement `bg-zinc-950`, `text-zinc-100`, etc. ou utilisent les tokens `bg-bdc-surface`, `text-bdc-text`. Le mode clair n'est pas implemente globalement. **Exception** : `ZeroDefectMethodology` utilise `bg-zinc-50 text-zinc-900` comme section light contrastante — choix de design intentionnel.
+**Historique** : Les mecanismes `.dark-theme` (Radix) et `#spark-app` (Spark) ont ete supprimes car orphelins (aucun element correspondant dans le DOM). Les composants codent directement `bg-zinc-950`, `text-zinc-100`, etc. ou utilisent les tokens `bg-bdc-surface`, `text-bdc-text`. Le mode clair n'est pas implemente globalement. **Exception** : `ZeroDefectMethodology` utilise `bg-gradient-to-b from-zinc-50 via-white to-zinc-50` comme section light contrastante — choix de design intentionnel.
 
 ---
 
@@ -55,20 +55,27 @@ Palette a 3 axes : accent + neutres + noir/blanc.
 | `emerald-400` | `#34d399` | Accent principal — prix, badges, icones, highlights |
 | `emerald-500` | `#10b981` | Badges featured ("Offre phare"), fond badge plein |
 | `emerald-300` | `#6ee7b7` | Gradient hero (via) |
+| `emerald-950` | — | Gradient mesh hero/form (fond profond) |
+| `teal-900` | — | Gradient mesh hero (fond secondaire) |
+| `teal-500` | — | Particules decoratives hero |
 | `emerald-500/10` | — | Fond badges "Eligible Kap Numerik" |
-| `emerald-400/30` | — | Bordure badges eligible |
+| `emerald-500/5` | — | Hover fond cartes secteurs |
+| `emerald-400/30` | — | Bordure badges eligible, hover CTA secondaire |
 | `emerald-400/40` | — | Bordure carte highlighted |
+| `emerald-400/10` | — | Shadow glow CTA primaire au hover |
 | `zinc-100` | `#f4f4f5` | Texte principal (titres, valeurs) |
 | `zinc-400` | `#a1a1aa` | Texte secondaire (corps, features) |
 | `zinc-500` | `#71717a` | Texte tertiaire (micro-labels, nav links) |
 | `zinc-600` | `#52525b` | Texte disclaimers |
 | `zinc-700` | `#3f3f46` | Texte meta (tres attenue) |
 | `zinc-950` | `#09090b` | Fond sections, fond cartes |
+| `zinc-900/50` | — | Fond MetricsBar (separation visuelle subtile) |
 | `white` | `#ffffff` | Boutons primaires, texte over dark |
 | `white/10` | — | Bordures standard |
+| `white/5` | — | Bordure navbar scroll, bordure MetricsBar |
 | `white/20` | — | Bordures hover / boutons ghost |
-| `white/[0.02]` | — | Glow radial hero (subtil) |
-| `white/[0.03]` | — | Fond cartes internes (price breakdown) |
+| `white/[0.02]` | — | Hover MetricsBar metriques |
+| `white/[0.03]` | — | Fond cartes internes, watermarks icones, fond infra |
 | `black` | `#000000` | Texte sur boutons primaires |
 | `black/20` | — | Ombre navbar au scroll |
 | `red-400` | `#f87171` | Texte erreur (validation formulaire) |
@@ -94,6 +101,7 @@ Font display : **Inter** (Google Fonts), chargee avec `font-display: swap` et `p
 | **Nav link** | `text-sm text-zinc-500 hover:text-zinc-100` | Menu desktop |
 | **Metric value** | `text-4xl md:text-5xl font-bold tracking-tighter` | "Des 240 EUR" |
 | **Metric label** | `text-xs tracking-widest uppercase text-zinc-500 font-medium` | "RESTE A CHARGE" |
+| **Decorative number** | `text-6xl font-black text-zinc-200/50` | Numeros step ZeroDefect |
 
 **Pattern** : `tracking-tighter` pour tout element bold > text-xl. `tracking-widest uppercase` pour tout micro-label.
 
@@ -118,21 +126,23 @@ Font display : **Inter** (Google Fonts), chargee avec `font-display: swap` et `p
 | Bordure standard | `border border-white/10` |
 | Bordure hover | `hover:border-white/20` |
 | Bordure accent | `border-emerald-400/30` (badge) / `border-emerald-400/40` (carte highlight) |
-| Bordure navbar scroll | `border-b border-white/10` |
+| Bordure navbar scroll | `border-b border-white/5` |
 | Rayon bouton | `rounded-lg` |
 | Rayon badge | `rounded-full` (pattern standard Kap Numerik) |
 | Rayon carte | herite composant shadcn (`rounded-xl` par defaut) |
-| Separateur | `border-white/10` (hr) |
+| Separateur | gradient `from-transparent via-white/10 to-transparent` (footer, pricing) |
 
 ### 2.5 Ombres et elevation
-
-Usage minimal — coherent avec l'esthetique flat/dark.
 
 | Element | Classes |
 |---------|---------|
 | Navbar au scroll | `shadow-lg shadow-black/20` |
-| Carte highlighted | `ring-1 ring-emerald-400/20` (glow subtil) |
-| Hero glow | `bg-white/[0.02] blur-3xl` (radial, decoratif) |
+| Carte highlighted | `ring-1 ring-emerald-400/20` + glow gradient `blur-sm opacity-30` |
+| Carte standard hover | `hover:shadow-xl hover:shadow-black/20` |
+| CTA primaire hover | `hover:shadow-lg hover:shadow-emerald-500/10` |
+| Hero gradient mesh | 3 blobs `blur-3xl` emerald-950/teal-900/zinc-950 |
+| Form gradient mesh | 2 blobs `blur-3xl opacity-10` emerald-950/teal-950 |
+| Focus glow inputs | `focus-visible:shadow-[0_0_0_4px] focus-visible:shadow-emerald-400/10` |
 
 ### 2.6 Transitions et mouvement
 
@@ -144,7 +154,20 @@ Trois tokens de duree definis dans `:root` et mappes dans `@theme inline` :
 | Standard | `--duration-base` (300ms) | `duration-base` | Cartes, boutons, liens, bordures |
 | Lente | `--duration-slow` (500ms) | `duration-slow` | Navbar (apparition/disparition fond), fade-in scroll |
 
-**Accessibilite** : `@media (prefers-reduced-motion: reduce)` defini dans `main.css` — desactive les transitions et animations pour les utilisateurs sensibles.
+**Animations v1.2** :
+
+| Animation | Technique | Declencheur | Motion-safe |
+|-----------|-----------|-------------|-------------|
+| Fade-in sections | `.fade-in-section` + `useFadeIn()` | Scroll (IntersectionObserver) | Oui |
+| Staggered cards | `.stagger-children` + `transitionDelay` inline | Parent `.is-visible` | Oui |
+| Particules hero | `animate-pulse` (8-12s) | Mount | `motion-safe:block hidden` |
+| Badge "Offre phare" | `animate-pulse` (3s) | Mount | `motion-safe:animate-pulse` |
+| Nav underline | `after:scale-x-0 hover:after:scale-x-100` | Hover | Oui (CSS transition) |
+| CTA scale | `hover:scale-[1.02]` | Hover | Oui (CSS transition) |
+| Card lift | `hover:-translate-y-1` | Hover | Oui (CSS transition) |
+| Chat launcher | framer-motion slide-up + fade | Mount (delayed) | `useReducedMotion()` |
+
+**Accessibilite** : `@media (prefers-reduced-motion: reduce)` defini dans `main.css` — desactive les transitions et animations pour les utilisateurs sensibles. Les particules hero sont wrappees dans `motion-safe:block hidden`.
 
 ---
 
@@ -156,9 +179,9 @@ Trois variantes utilisees :
 
 | Variante | Classes | Contexte |
 |----------|---------|----------|
-| **Primaire** | `bg-white text-black hover:bg-zinc-200 font-medium rounded-lg` | CTA principal (hero, navbar, carte highlighted) |
+| **Primaire** | `bg-gradient-to-b from-white to-zinc-100 text-black hover:shadow-lg hover:shadow-emerald-500/10 hover:scale-[1.02] font-medium rounded-lg` | CTA principal (hero, navbar, carte highlighted, submit form) |
 | **Ghost** | `bg-transparent border border-white/20 text-white hover:bg-white/5 hover:border-white/30 font-medium rounded-lg` | CTA secondaire, cartes standard, maintenance |
-| **Outline** | `variant="outline"` (shadcn) + overrides inline | CTA secondaire hero |
+| **Outline** | `variant="outline"` (shadcn) + `hover:border-emerald-400/30` | CTA secondaire hero |
 
 **Tailles** :
 - Hero : `text-base px-8 py-6`
@@ -171,10 +194,10 @@ Basees sur `<Card>` shadcn, 4 variantes :
 
 | Variante | Classes distinctives |
 |----------|---------------------|
-| **Standard** | `bg-zinc-950 border-white/10 hover:border-white/20 p-6 md:p-8` |
-| **Highlighted** | `bg-zinc-950 border-emerald-400/40 ring-1 ring-emerald-400/20 md:scale-105 md:-my-4 z-10` + badge "Offre phare" positionne en `absolute -top-3` |
+| **Standard** | `bg-bdc-surface border-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 p-6 md:p-8` |
+| **Highlighted** | `bg-gradient-to-b from-zinc-900 via-zinc-950 to-zinc-950 border-emerald-400/40 ring-1 ring-emerald-400/20 md:scale-105 md:-my-4 z-10` + glow gradient + badge "Offre phare" animate-pulse |
 | **Maintenance** | Standard + icone Shield + badge "Protection continue" |
-| **Price breakdown** | `bg-white/[0.03] border-white/10 rounded-xl` — imbriquee dans carte pricing |
+| **Price breakdown** | `bg-white/[0.03] border-white/10 rounded-xl` + barre progression FEDER (h-1 bg-emerald-400) + separateur gradient |
 
 ### 3.3 Badges
 
@@ -183,7 +206,7 @@ Basees sur `<Badge>` shadcn, 2 variantes :
 | Variante | Classes | Texte type |
 |----------|---------|------------|
 | **Eligible** | `bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs rounded-full px-3 py-1` | "Eligible Kap Numerik" |
-| **Featured** | `bg-emerald-500 text-white border-0 font-semibold text-xs px-3 py-1` | "Offre phare" (avec icone Star) |
+| **Featured** | `bg-emerald-500 text-white border-0 font-semibold text-xs px-3 py-1 motion-safe:animate-pulse` (3s) | "Offre phare" (avec icone Star) |
 
 ### 3.4 Icones
 
@@ -194,23 +217,38 @@ Lucide React — 20+ icones utilisees. Standards de taille :
 | Small | `w-4 h-4` | CheckCircle (features), icones inline |
 | Medium | `w-5 h-5` | Star, Shield, ChevronRight, icones titres |
 | Large | `w-6 h-6` | Menu, X (burger mobile) |
+| Watermark | `w-16 h-16 text-white/[0.03] group-hover:text-white/[0.06]` | Decoratif infra cards |
 
 Toutes les icones decoratives portent `aria-hidden="true"`.
 
 ### 3.5 Formulaire (EligibilityForm)
 
-- Inputs : fond transparent, bordure `border-white/10`, focus `ring-emerald-400/30 border-emerald-400/50`
+- Inputs : fond transparent, bordure `border-white/10`, focus `ring-emerald-400/30 border-emerald-400/50` + shadow glow `shadow-[0_0_0_4px] shadow-emerald-400/10`
 - Labels : `text-sm text-zinc-400`
 - Validation : cote client, messages d'erreur en `text-red-400`
 - Honeypot : champ cache pour anti-spam
 - Consentement RGPD : checkbox obligatoire
+- Background : gradient mesh subtil (2 blobs emerald-950/teal-950)
 
 ### 3.6 Navigation
 
-- **Desktop** : liens horizontaux `text-sm text-zinc-500 hover:text-zinc-100` + CTA primaire
+- **Desktop** : liens horizontaux `text-sm text-zinc-500 hover:text-zinc-100` + underline emerald animee (`after:scale-x-0 hover:after:scale-x-100`) + CTA primaire (micro-gradient)
 - **Mobile** : burger icon → panel overlay avec liens verticaux + CTA pleine largeur
-- **Scroll behavior** : navbar fixe, fond glassmorphism au scroll (`bg-zinc-950/80 backdrop-blur-xl`)
+- **Scroll behavior** : navbar fixe, fond glassmorphism au scroll (`bg-zinc-950/80 backdrop-blur-xl border-b border-white/5`)
+- **Logo** : `hover:opacity-80 transition-opacity`
 - **Ordre** : Nos offres → Infrastructures → Methode Zero Defaut
+
+### 3.7 ChatWidget
+
+- **Panel** : `bg-zinc-950/95 backdrop-blur-sm` (glassmorphism)
+- **Quick replies** : `hover:bg-emerald-500/10 hover:border-emerald-400/30` (hover colore)
+- **Launcher** : framer-motion entry animation (slide-up + fade)
+
+### 3.8 LegalFooter
+
+- **Separateurs** : gradient `from-transparent via-white/10 to-transparent`
+- **Liens** : `hover:text-emerald-400` (accent colore)
+- **Nom BDC** : `text-zinc-100 font-bold` dans copyright
 
 ---
 
@@ -236,7 +274,8 @@ Chaque section suit : micro-label → h2 → sous-titre → contenu → disclaim
 ```
 Prix de base barre (text-zinc-600 line-through)
 - Prise en charge FEDER 80% (text-emerald-400, signe -)
-─────────────────────────────────
+[barre progression h-1 bg-emerald-400 w-[80%]]
+────── gradient separator ──────
 = Reste a charge (text-emerald-400, grand, tracking-tighter)
 ```
 
@@ -256,14 +295,29 @@ Icone emerald + texte zinc-400. `flex-shrink-0 mt-0.5` pour alignement vertical 
 ### 4.4 Pattern CTA double
 
 Hero et sections cles utilisent deux CTA cote a cote :
-- Primaire (bg-white) — action principale ("Verifier mon eligibilite")
-- Ghost (border-white/20) — action secondaire ("Decouvrir nos offres")
+- Primaire (micro-gradient from-white to-zinc-100, shadow emerald hover, scale) — action principale ("Verifier mon eligibilite")
+- Ghost (border-white/20, hover:border-emerald-400/30) — action secondaire ("Decouvrir nos offres")
 
 Layout : `flex flex-col sm:flex-row gap-4`
 
 ### 4.5 Pattern scroll-to
 
 Toutes les navigations internes utilisent `element.scrollIntoView({ behavior: 'smooth', block: 'start' })` avec `e.preventDefault()` sur les liens ancre.
+
+### 4.6 Pattern gradient mesh
+
+Fond de profondeur visuelle utilise dans Hero et EligibilityForm :
+- 2-3 divs en `absolute` avec `blur-3xl` et `opacity-10`-`opacity-20`
+- Couleurs : `emerald-950`, `teal-900`, `zinc-950`
+- CSS pur, pas de JS/canvas
+
+### 4.7 Pattern stagger reveal
+
+Grids de cartes (Pricing, Infra, Sectors) utilisent :
+- Classe CSS `.stagger-children` sur le conteneur grid
+- `transitionDelay: ${index * 100}ms` inline sur chaque enfant
+- Active uniquement quand parent `.fade-in-section.is-visible`
+- Desactive par `prefers-reduced-motion: reduce`
 
 ---
 
@@ -279,6 +333,7 @@ Grilles cles :
 - Pricing : `grid md:grid-cols-3 gap-6`
 - MetricsBar : `grid grid-cols-2 md:grid-cols-4`
 - Infra : `grid md:grid-cols-2 gap-6`
+- Sectors : `grid sm:grid-cols-2 lg:grid-cols-3 gap-6`
 
 ---
 
@@ -293,7 +348,8 @@ Points cles integres au design system :
 - `role="menu"` / `role="menuitem"` sur le menu mobile
 - `sr-only` pour contenu masque visuellement mais accessible aux lecteurs d'ecran
 - Focus visible : `focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black`
-- `prefers-reduced-motion: reduce` respecte
+- `prefers-reduced-motion: reduce` respecte (transitions, animations, stagger, particules)
+- `motion-safe:block hidden` pour elements decoratifs animes (particules hero)
 - Skip link implicite via logo → `#contenu-principal`
 - Contrastes verifies >= 4.5:1 pour texte courant, >= 3:1 pour grand texte
 
@@ -309,7 +365,7 @@ Points cles integres au design system :
 | 4 | **Pas de design tokens custom** | ✅ Resolu | 5 tokens couleur + 3 tokens duree definis dans `:root` et mappes dans `@theme inline`. |
 | 5 | **Transition inconsistante** | ✅ Resolu | 3 tokens de duree (fast/base/slow) definis et documentes. |
 | 6 | **Badges inconsistants** | ✅ Resolu | Pattern `rounded-full px-3 py-1` applique uniformement. |
-| 7 | **Focus states formulaire** | ✅ Resolu | Standardise sur `focus:ring-emerald-400/30 focus:border-emerald-400/50`. |
+| 7 | **Focus states formulaire** | ✅ Resolu | Standardise sur `focus:ring-emerald-400/30 focus:border-emerald-400/50` + shadow glow. |
 
 ---
 
@@ -327,14 +383,47 @@ Pour les developpeurs, copier-coller les classes les plus frequentes :
 /* Accent */              text-emerald-400 / text-bdc-emerald
 /* Accent fond */         bg-emerald-500/10
 /* Accent bordure */      border-emerald-400/30
-/* Bouton primaire */     bg-white text-black hover:bg-zinc-200
+/* Bouton primaire */     bg-gradient-to-b from-white to-zinc-100 text-black hover:shadow-lg hover:shadow-emerald-500/10 hover:scale-[1.02]
 /* Bouton ghost */        bg-transparent border-white/20 text-white hover:bg-white/5
 /* Transition */          transition-all duration-base
 /* Section padding */     py-24 md:py-36 px-6 md:px-8
 /* Container */           max-w-7xl mx-auto
 /* Focus ring */          focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black
-/* Focus form */          focus:ring-emerald-400/30 focus:border-emerald-400/50
+/* Focus form */          focus:ring-emerald-400/30 focus:border-emerald-400/50 focus:shadow-[0_0_0_4px] focus:shadow-emerald-400/10
 /* Micro-label */         text-xs tracking-widest uppercase text-zinc-500 font-medium
 /* Heading */             font-bold tracking-tighter text-zinc-100
 /* Badge Kap Numerik */   rounded-full px-3 py-1 bg-emerald-500/10 text-emerald-400
+/* Gradient mesh */       absolute blur-3xl opacity-10-20 (emerald-950/teal-900)
+/* Stagger grid */        stagger-children + transitionDelay inline
+/* Separateur */          h-px bg-gradient-to-r from-transparent via-white/10 to-transparent
 ```
+
+---
+
+## 9. Changelog
+
+### v1.2.0 (2026-03-14) — Refonte visuelle
+
+**Hero** : Gradient mesh 3 blobs CSS pur, 4 particules decoratives flottantes (motion-safe), CTA primaire micro-gradient + shadow emerald + scale, CTA secondaire hover emerald.
+
+**Pricing** : Carte highlighted gradient fond + glow perimetrique, badge animate-pulse 3s, cartes standard hover lift -translate-y-1, barre progression FEDER 80%, separateur gradient.
+
+**MetricsBar** : Fond bg-zinc-900/50 + border-y white/5, hover bg-white/[0.02], accent bar gradient emerald sur metrique 0.
+
+**InfrastructuresSection** : Watermarks icones decoratives w-16 h-16, group-hover reveal.
+
+**ZeroDefectMethodology** : Fond gradient from-zinc-50 via-white to-zinc-50, numeros decoratifs text-6xl.
+
+**TargetSectors** : hover:bg-emerald-500/5 colore, group-hover icones emerald-300.
+
+**EligibilityForm** : Gradient mesh subtil, focus glow shadow-[0_0_0_4px], submit CTA premium.
+
+**ChatWidget** : Panel backdrop-blur-sm glassmorphism, quick replies hover emerald.
+
+**LegalFooter** : Separateurs gradient, liens hover:text-emerald-400, nom BDC bold.
+
+**Navbar** : Border scroll white/5, logo hover:opacity-80, CTA micro-gradient aligne.
+
+**Micro-interactions** : Stagger reveal cartes (100ms delay), nav underline emerald scaleX.
+
+**CSS** : Classes `.stagger-children` + reduced-motion. Toutes animations respectent prefers-reduced-motion.

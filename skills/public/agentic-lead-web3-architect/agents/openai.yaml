@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agentic Lead Web3 Architect"
+  short_description: "Agentic DevSecOps lead for secure Web3 builds"
+  default_prompt: "Use $agentic-lead-web3-architect to deliver secure long-horizon full-stack and Web3 implementations with strict validation and deployment-ready output."

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Menu, X } from 'lucide-react'
 
@@ -25,22 +25,21 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const scrollToSection = (id: string) => {
+  const scrollToSection = useCallback((id: string) => {
     const element = document.getElementById(id)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' })
       setMobileMenuOpen(false)
     }
-  }
+  }, [])
 
   return (
     <nav
       aria-label="Navigation principale"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
           ? 'bg-zinc-950/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20'
           : 'bg-transparent border-b border-transparent'
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-8 py-4">
         <div className="flex items-center justify-between">

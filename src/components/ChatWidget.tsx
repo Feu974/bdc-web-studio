@@ -165,7 +165,7 @@ export function ChatWidget() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen])
 
-  const getAutoResponse = (text: string): string | null => {
+  const getAutoResponse = useCallback((text: string): string | null => {
     const lowerText = text.toLowerCase()
     for (const [key, response] of Object.entries(autoResponses)) {
       if (lowerText.includes(key)) {
@@ -173,9 +173,9 @@ export function ChatWidget() {
       }
     }
     return null
-  }
+  }, [])
 
-  const handleSendMessage = (text: string = inputValue) => {
+  const handleSendMessage = useCallback((text: string) => {
     if (!text.trim()) return
 
     const userMessage: Message = {
@@ -204,16 +204,16 @@ export function ChatWidget() {
       setMessages((current) => [...(current || []), supportMessage])
       setIsTyping(false)
     }, 1500 + Math.random() * 1000)
-  }
+  }, [getAutoResponse, setMessages])
 
-  const handleQuickReply = (reply: string) => {
+  const handleQuickReply = useCallback((reply: string) => {
     handleSendMessage(reply)
-  }
+  }, [handleSendMessage])
 
-  const formatTime = (timestamp: number) => {
+  const formatTime = useCallback((timestamp: number) => {
     const date = new Date(timestamp)
     return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-  }
+  }, [])
 
   return (
     <>
@@ -261,7 +261,7 @@ export function ChatWidget() {
             aria-labelledby={CHAT_TITLE_ID}
             {...(prefersReducedMotion
               ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.01 } }
-              : { initial: { opacity: 0, y: 20, scale: 0.95 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0, y: 20, scale: 0.95 }, transition: { type: "spring", stiffness: 300, damping: 30 } }
+              : { initial: { opacity: 0, y: 24, scale: 0.96 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0, y: 24, scale: 0.96 }, transition: { type: "spring", stiffness: 280, damping: 26 } }
             )}
             className="fixed bottom-6 right-6 w-[380px] h-[600px] bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
@@ -302,11 +302,10 @@ export function ChatWidget() {
                     className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                        message.sender === 'user'
-                          ? 'bg-white text-black'
-                          : 'bg-zinc-900 text-zinc-50'
-                      }`}
+                      className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.sender === 'user'
+                        ? 'bg-white text-black'
+                        : 'bg-zinc-900 text-zinc-50'
+                        }`}
                     >
                       <p className="text-sm leading-relaxed">{message.text}</p>
                       <span className="text-xs opacity-50 mt-1 block" aria-label={`Envoye a ${formatTime(message.timestamp)}`}>
@@ -355,7 +354,7 @@ export function ChatWidget() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault()
-                  handleSendMessage()
+                  handleSendMessage(inputValue)
                 }}
                 className="flex gap-2"
               >

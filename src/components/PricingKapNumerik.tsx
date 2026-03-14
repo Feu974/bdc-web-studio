@@ -2,6 +2,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, Shield, Star } from 'lucide-react'
+import { useFadeIn } from '@/hooks/use-fade-in'
 import type { PricingPlan, MaintenanceContract } from '@/types/business'
 
 // --- Donnees metier (source unique de verite) ---
@@ -122,9 +123,9 @@ const PackCard: React.FC<PackCardProps> = ({ plan, onCTA }) => {
 
   return (
     <Card
-      className={`bg-zinc-950 p-6 md:p-8 transition-all duration-300 relative flex flex-col ${
+      className={`bg-bdc-surface p-6 md:p-8 transition-all duration-base relative flex flex-col hover:-translate-y-0.5 transition-transform ${
         isHighlighted
-          ? 'border-emerald-400/40 ring-1 ring-emerald-400/20 md:scale-105 md:-my-4 z-10'
+          ? 'border-emerald-400/40 ring-1 ring-emerald-400/20 md:scale-105 md:-my-4 z-10 hover:shadow-lg hover:shadow-emerald-500/5'
           : 'border-white/10 hover:border-white/20'
       }`}
     >
@@ -142,7 +143,7 @@ const PackCard: React.FC<PackCardProps> = ({ plan, onCTA }) => {
           <h3 className={`font-bold tracking-tight text-zinc-100 ${isHighlighted ? 'text-2xl' : 'text-xl'}`}>
             {plan.name}
           </h3>
-          <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs whitespace-nowrap">
+          <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs whitespace-nowrap rounded-full px-3 py-1">
             Eligible Kap Numerik
           </Badge>
         </div>
@@ -165,11 +166,12 @@ const PackCard: React.FC<PackCardProps> = ({ plan, onCTA }) => {
 
       <Button
         onClick={onCTA}
-        className={`w-full font-medium rounded-lg transition-colors duration-300 ${
+        className={`w-full font-medium rounded-lg transition-colors duration-base ${
           isHighlighted
             ? 'bg-white text-black hover:bg-zinc-200'
             : 'bg-transparent border border-white/20 text-white hover:bg-white/5 hover:border-white/30'
         }`}
+        aria-label={isHighlighted ? `Verifier mon reste a charge pour ${plan.name}` : `Decouvrir l'offre ${plan.name}`}
       >
         {isHighlighted ? 'Verifier mon reste a charge' : 'Decouvrir cette offre'}
       </Button>
@@ -182,14 +184,14 @@ interface MaintenanceCardProps {
 }
 
 const MaintenanceCardComponent: React.FC<MaintenanceCardProps> = ({ contract }) => (
-  <Card className="bg-zinc-950 border-white/10 p-8 hover:border-white/20 transition-all duration-300">
+  <Card className="bg-bdc-surface border-bdc-border p-8 hover:border-white/20 transition-all duration-base">
     <div className="mb-6">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-2">
           <Shield className="h-5 w-5 text-emerald-400" aria-hidden="true" />
           <h3 className="text-2xl font-bold tracking-tight text-zinc-100">{contract.name}</h3>
         </div>
-        <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs">
+        <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs rounded-full px-3 py-1">
           Protection continue
         </Badge>
       </div>
@@ -214,7 +216,7 @@ const MaintenanceCardComponent: React.FC<MaintenanceCardProps> = ({ contract }) 
         const el = document.getElementById('eligibilite')
         el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
-      className="w-full bg-transparent border border-white/20 text-white hover:bg-white/5 hover:border-white/30 transition-all duration-300 font-medium rounded-lg"
+      className="w-full bg-transparent border border-white/20 text-white hover:bg-white/5 hover:border-white/30 transition-all duration-base font-medium rounded-lg"
     >
       Activer la maintenance
     </Button>
@@ -224,14 +226,19 @@ const MaintenanceCardComponent: React.FC<MaintenanceCardProps> = ({ contract }) 
 // --- Composant principal ---
 
 const PricingKapNumerik: React.FC = () => {
+  const { ref, isVisible } = useFadeIn()
+
   const scrollToEligibilite = () => {
     const el = document.getElementById('eligibilite')
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
-    <section id="kap-numerik" className="bg-zinc-950 py-24 md:py-36 px-6 md:px-8">
-      <div className="max-w-7xl mx-auto">
+    <section id="kap-numerik" className="bg-bdc-surface bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-950/20 via-transparent to-transparent py-24 md:py-36 px-6 md:px-8">
+      <div
+        ref={ref}
+        className={`max-w-7xl mx-auto fade-in-section ${isVisible ? 'is-visible' : ''}`}
+      >
         <p className="text-xs tracking-widest uppercase text-zinc-500 font-medium mb-4 text-center">
           Dispositif Kap Numerik — FEDER
         </p>

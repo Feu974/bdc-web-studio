@@ -7,7 +7,7 @@ const LEGAL: LegalMentions = {
     "Ce projet a ete finance par l'Union Europeenne dans le cadre du programme FEDER-FSE+ Reunion dont l'Autorite de gestion est la Region Reunion. L'Europe s'engage a La Reunion avec le fonds FEDER.",
   nafActivity: 'Programmation Informatique',
   nafCode: '62.01Z',
-  companyName: 'BDC Web',
+  companyName: 'BDC Digital',
 }
 
 const scrollToSection = (id: string) => {
@@ -30,7 +30,11 @@ const FOOTER_LINKS: FooterLink[] = [
 
 // --- Composant ---
 
-const LegalFooter: React.FC = () => {
+interface LegalFooterProps {
+  onOpenLegal: (modal: 'mentions' | 'confidentialite') => void
+}
+
+const LegalFooter: React.FC<LegalFooterProps> = ({ onOpenLegal }) => {
   const currentYear = new Date().getFullYear()
 
   return (
@@ -70,6 +74,24 @@ const LegalFooter: React.FC = () => {
                   </a>
                 </li>
               ))}
+              <li>
+                <button
+                  type="button"
+                  onClick={() => onOpenLegal('mentions')}
+                  className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
+                >
+                  Mentions legales
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => onOpenLegal('confidentialite')}
+                  className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
+                >
+                  Politique de confidentialite
+                </button>
+              </li>
             </ul>
           </nav>
 

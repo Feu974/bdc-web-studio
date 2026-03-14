@@ -1,13 +1,20 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
+import { lazy, Suspense } from 'react'
 import Navbar from '@/components/Navbar'
 import HeroSection from '@/components/HeroSection'
 import MetricsBar from '@/components/MetricsBar'
-import InfrastructuresSection from '@/components/InfrastructuresSection'
-import PricingKapNumerik from '@/components/PricingKapNumerik'
-import ZeroDefectMethodology from '@/components/ZeroDefectMethodology'
-import EligibilityForm from '@/components/EligibilityForm'
-import LegalFooter from '@/components/LegalFooter'
+import { ChatWidget } from '@/components/ChatWidget'
+import { LegalModals, useLegalModals } from '@/components/LegalModals'
+
+// ── Lazy-loaded : sous la ligne de flottaison ──────────────────────────────────
+const TargetSectors = lazy(() => import('@/components/TargetSectors'))
+const InfrastructuresSection = lazy(() => import('@/components/InfrastructuresSection'))
+const PricingKapNumerik = lazy(() => import('@/components/PricingKapNumerik'))
+const KapNumerikProcess = lazy(() => import('@/components/KapNumerikProcess'))
+const ZeroDefectMethodology = lazy(() => import('@/components/ZeroDefectMethodology'))
+const EligibilityForm = lazy(() => import('@/components/EligibilityForm'))
+const LegalFooter = lazy(() => import('@/components/LegalFooter'))
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,6 +25,8 @@ const queryClient = new QueryClient({
 })
 
 function App() {
+  const { openModal, setOpenModal } = useLegalModals()
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-black text-zinc-50 font-sans">
@@ -31,13 +40,21 @@ function App() {
         <main id="contenu-principal">
           <HeroSection />
           <MetricsBar />
-          <InfrastructuresSection />
-          <PricingKapNumerik />
-          <ZeroDefectMethodology />
-          <EligibilityForm />
+          <Suspense fallback={null}>
+            <TargetSectors />
+            <InfrastructuresSection />
+            <PricingKapNumerik />
+            <KapNumerikProcess />
+            <ZeroDefectMethodology />
+            <EligibilityForm />
+          </Suspense>
         </main>
-        <LegalFooter />
+        <ChatWidget />
+        <Suspense fallback={null}>
+          <LegalFooter onOpenLegal={setOpenModal} />
+        </Suspense>
       </div>
+      <LegalModals open={openModal} onOpenChange={setOpenModal} />
       <Toaster position="top-right" theme="dark" className="font-sans" />
     </QueryClientProvider>
   )

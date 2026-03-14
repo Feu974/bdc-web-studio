@@ -74,7 +74,7 @@ const InfrastructuresSection: React.FC = () => (
                 <div className="w-12 h-12 bg-white/[0.05] rounded-xl flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-colors duration-300">
                   <IconComponent className="w-6 h-6 text-zinc-300" aria-hidden="true" />
                 </div>
-                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs">
+                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs rounded-full px-3 py-1">
                   Standard BDC
                 </Badge>
               </div>

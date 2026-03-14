@@ -28,14 +28,15 @@ interface FieldErrors {
   consent?: string;
 }
 
-const inputClasses = "bg-white/[0.03] border-white/10 text-zinc-100 placeholder:text-zinc-600 focus-visible:border-zinc-400 focus-visible:ring-zinc-400/20 rounded-lg"
+const inputClasses = "bg-white/[0.03] border-white/10 text-zinc-100 placeholder:text-zinc-600 focus-visible:border-emerald-400/50 focus-visible:ring-emerald-400/30 rounded-lg"
 const inputErrorClasses = "bg-white/[0.03] border-red-500/60 text-zinc-100 placeholder:text-zinc-600 focus-visible:border-red-400 focus-visible:ring-red-400/20 rounded-lg"
-const selectTriggerClasses = "bg-white/[0.03] border-white/10 text-zinc-100 focus:border-zinc-400 focus:ring-zinc-400/20 rounded-lg"
+const selectTriggerClasses = "bg-white/[0.03] border-white/10 text-zinc-100 focus:border-emerald-400/50 focus:ring-emerald-400/30 rounded-lg"
 
 const EligibilityForm: React.FC = () => {
   const [formData, setFormData] = useState<EligibilityFormData>(INITIAL_FORM)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const validate = (): FieldErrors => {
     const errs: FieldErrors = {}
@@ -49,9 +50,12 @@ const EligibilityForm: React.FC = () => {
     return errs
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitted(true)
+
+    // Guard: empêche les doubles soumissions
+    if (isSubmitting) return
 
     // Honeypot anti-spam
     if (formData.honeypot) {
@@ -65,19 +69,27 @@ const EligibilityForm: React.FC = () => {
       return
     }
 
-    console.log({
-      nom: formData.name,
-      societe: formData.company,
-      email: formData.email,
-      taille: formData.size,
-      budget: formData.budget,
-      timestamp: new Date().toISOString(),
-    })
+    setIsSubmitting(true)
 
-    toast.success('Demande envoyee')
-    setFormData(INITIAL_FORM)
-    setErrors({})
-    setSubmitted(false)
+    try {
+      console.log({
+        nom: formData.name,
+        societe: formData.company,
+        email: formData.email,
+        taille: formData.size,
+        budget: formData.budget,
+        timestamp: new Date().toISOString(),
+      })
+
+      toast.success('Demande envoyee')
+      setFormData(INITIAL_FORM)
+      setErrors({})
+      setSubmitted(false)
+    } catch {
+      toast.error('Une erreur est survenue. Veuillez réessayer.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const fieldError = (field: keyof FieldErrors) => submitted ? errors[field] : undefined
@@ -294,9 +306,11 @@ const EligibilityForm: React.FC = () => {
 
           <Button
             type="submit"
-            className="w-full bg-white text-black hover:bg-zinc-200 transition-colors duration-300 font-medium py-6 text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
+            disabled={isSubmitting}
+            aria-busy={isSubmitting}
+            className="w-full bg-white text-black hover:bg-zinc-200 transition-colors duration-300 font-medium py-6 text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Envoyer la demande
+            {isSubmitting ? 'Envoi en cours\u2026' : 'Envoyer la demande'}
           </Button>
         </form>
       </div>

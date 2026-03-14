@@ -88,7 +88,7 @@ const PriceBreakdown: React.FC<PriceBreakdownProps> = ({ plan, compact = false }
       </span>
     </div>
 
-    {/* Prise en charge FEDER */}
+    {/* Prise en charge FEDER avec barre de progression visuelle */}
     <div className="flex items-center justify-between">
       <span className="text-sm font-semibold text-emerald-400">
         Prise en charge FEDER ({(plan.federCoverageRate * 100).toFixed(0)} %)
@@ -98,7 +98,13 @@ const PriceBreakdown: React.FC<PriceBreakdownProps> = ({ plan, compact = false }
       </span>
     </div>
 
-    <hr className="border-white/10" />
+    {/* Barre de progression FEDER 80% */}
+    <div className="h-1 rounded-full bg-emerald-400/20" role="presentation" aria-hidden="true">
+      <div className="w-[80%] h-full bg-emerald-400 rounded-full" />
+    </div>
+
+    {/* Separateur gradient */}
+    <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" role="separator" />
 
     {/* Reste a charge */}
     <div className="flex items-center justify-between">
@@ -123,15 +129,20 @@ const PackCard: React.FC<PackCardProps> = ({ plan, onCTA }) => {
 
   return (
     <Card
-      className={`bg-bdc-surface p-6 md:p-8 transition-all duration-base relative flex flex-col hover:-translate-y-0.5 transition-transform ${
+      className={`relative p-6 md:p-8 flex flex-col transition-[transform,box-shadow,border-color] duration-base ${
         isHighlighted
-          ? 'border-emerald-400/40 ring-1 ring-emerald-400/20 md:scale-105 md:-my-4 z-10 hover:shadow-lg hover:shadow-emerald-500/5'
-          : 'border-white/10 hover:border-white/20'
+          ? 'bg-gradient-to-b from-zinc-900 via-zinc-950 to-zinc-950 border-emerald-400/40 ring-1 ring-emerald-400/20 md:scale-105 md:-my-4 z-10 hover:shadow-lg hover:shadow-emerald-500/5'
+          : 'bg-bdc-surface border-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20'
       }`}
     >
+      {/* Glow perimetrique pour carte highlighted */}
+      {isHighlighted && (
+        <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-emerald-400/10 via-teal-400/5 to-transparent blur-sm opacity-30" aria-hidden="true" />
+      )}
+
       {isHighlighted && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <Badge className="bg-emerald-500 text-white border-0 font-semibold text-xs px-3 py-1 flex items-center gap-1.5">
+          <Badge className="bg-emerald-500 text-white border-0 font-semibold text-xs px-3 py-1 flex items-center gap-1.5 motion-safe:animate-pulse" style={{ animationDuration: '3s' }}>
             <Star className="w-3 h-3" aria-hidden="true" />
             Offre phare
           </Badge>
@@ -166,9 +177,9 @@ const PackCard: React.FC<PackCardProps> = ({ plan, onCTA }) => {
 
       <Button
         onClick={onCTA}
-        className={`w-full font-medium rounded-lg transition-colors duration-base ${
+        className={`w-full font-medium rounded-lg transition-[colors,transform,box-shadow] duration-base ${
           isHighlighted
-            ? 'bg-white text-black hover:bg-zinc-200'
+            ? 'bg-gradient-to-b from-white to-zinc-100 text-black hover:shadow-lg hover:shadow-emerald-500/10 hover:scale-[1.02]'
             : 'bg-transparent border border-white/20 text-white hover:bg-white/5 hover:border-white/30'
         }`}
         aria-label={isHighlighted ? `Verifier mon reste a charge pour ${plan.name}` : `Decouvrir l'offre ${plan.name}`}
@@ -184,7 +195,7 @@ interface MaintenanceCardProps {
 }
 
 const MaintenanceCardComponent: React.FC<MaintenanceCardProps> = ({ contract }) => (
-  <Card className="bg-bdc-surface border-bdc-border p-8 hover:border-white/20 transition-all duration-base">
+  <Card className="bg-bdc-surface border-bdc-border p-8 hover:border-white/20 transition-[border-color,box-shadow,transform] duration-base hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20">
     <div className="mb-6">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-2">

@@ -38,8 +38,11 @@ const LegalFooter: React.FC<LegalFooterProps> = ({ onOpenLegal }) => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-zinc-950 border-t border-white/10 py-14 px-6 md:px-8">
-      <div className="max-w-7xl mx-auto">
+    <footer className="bg-zinc-950 py-14 px-6 md:px-8">
+      {/* Separateur gradient top */}
+      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-0" aria-hidden="true" />
+
+      <div className="max-w-7xl mx-auto pt-14">
         {/* Grille 3 colonnes */}
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 mb-12">
           {/* Col 1 — Identite */}
@@ -68,7 +71,7 @@ const LegalFooter: React.FC<LegalFooterProps> = ({ onOpenLegal }) => {
                   <a
                     href={`#${link.sectionId}`}
                     onClick={(e) => { e.preventDefault(); scrollToSection(link.sectionId); }}
-                    className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
+                    className="text-sm text-zinc-500 hover:text-emerald-400 transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
                   >
                     {link.label}
                   </a>
@@ -78,7 +81,7 @@ const LegalFooter: React.FC<LegalFooterProps> = ({ onOpenLegal }) => {
                 <button
                   type="button"
                   onClick={() => onOpenLegal('mentions')}
-                  className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
+                  className="text-sm text-zinc-500 hover:text-emerald-400 transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
                 >
                   Mentions legales
                 </button>
@@ -87,7 +90,7 @@ const LegalFooter: React.FC<LegalFooterProps> = ({ onOpenLegal }) => {
                 <button
                   type="button"
                   onClick={() => onOpenLegal('confidentialite')}
-                  className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
+                  className="text-sm text-zinc-500 hover:text-emerald-400 transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
                 >
                   Politique de confidentialite
                 </button>
@@ -108,10 +111,10 @@ const LegalFooter: React.FC<LegalFooterProps> = ({ onOpenLegal }) => {
           </div>
         </div>
 
-        {/* Barre de copyright */}
-        <hr className="border-white/10 mb-6" />
+        {/* Barre de copyright — separateur gradient */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6" aria-hidden="true" />
         <div className="flex flex-col items-center justify-between gap-4 text-xs text-zinc-600 sm:flex-row">
-          <p>&copy; {currentYear} {LEGAL.companyName} — Studio de developpement. Tous droits reserves.</p>
+          <p>&copy; {currentYear} <span className="text-zinc-100 font-bold">{LEGAL.companyName}</span> — Studio de developpement. Tous droits reserves.</p>
           <p>Activite principale : {LEGAL.nafActivity} (NAF {LEGAL.nafCode})</p>
         </div>
       </div>

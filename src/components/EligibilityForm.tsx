@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
+import { useFadeIn } from '@/hooks/use-fade-in'
 import type { EligibilityFormData } from '@/types/business'
 
 const INITIAL_FORM: EligibilityFormData = {
@@ -28,11 +29,12 @@ interface FieldErrors {
   consent?: string;
 }
 
-const inputClasses = "bg-white/[0.03] border-white/10 text-zinc-100 placeholder:text-zinc-600 focus-visible:border-emerald-400/50 focus-visible:ring-emerald-400/30 rounded-lg"
-const inputErrorClasses = "bg-white/[0.03] border-red-500/60 text-zinc-100 placeholder:text-zinc-600 focus-visible:border-red-400 focus-visible:ring-red-400/20 rounded-lg"
-const selectTriggerClasses = "bg-white/[0.03] border-white/10 text-zinc-100 focus:border-emerald-400/50 focus:ring-emerald-400/30 rounded-lg"
+const inputClasses = "rounded-lg border-white/10 bg-white/[0.03] text-zinc-100 placeholder:text-zinc-600 transition-[border-color,box-shadow,background-color] duration-base focus-visible:border-emerald-400/50 focus-visible:ring-emerald-400/30 focus-visible:shadow-[0_0_0_4px] focus-visible:shadow-emerald-400/10"
+const inputErrorClasses = "rounded-lg border-red-500/60 bg-white/[0.03] text-zinc-100 placeholder:text-zinc-600 transition-[border-color,box-shadow,background-color] duration-base focus-visible:border-red-400 focus-visible:ring-red-400/20"
+const selectTriggerClasses = "rounded-lg border-white/10 bg-white/[0.03] text-zinc-100 transition-[border-color,box-shadow,background-color] duration-base focus:border-emerald-400/50 focus:ring-emerald-400/30 focus:shadow-[0_0_0_4px] focus:shadow-emerald-400/10"
 
 const EligibilityForm: React.FC = () => {
+  const { ref, isVisible } = useFadeIn()
   const [formData, setFormData] = useState<EligibilityFormData>(INITIAL_FORM)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [submitted, setSubmitted] = useState(false)
@@ -95,8 +97,16 @@ const EligibilityForm: React.FC = () => {
   const fieldError = (field: keyof FieldErrors) => submitted ? errors[field] : undefined
 
   return (
-    <section id="eligibilite" className="bg-zinc-950 py-24 md:py-36 px-6 md:px-8">
-      <div className="max-w-3xl mx-auto">
+    <section id="eligibilite" className="relative bg-zinc-950 py-24 md:py-36 px-6 md:px-8 overflow-hidden">
+      {/* Gradient mesh subtil */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-emerald-950/30 rounded-full blur-3xl opacity-10" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-teal-950/30 rounded-full blur-3xl opacity-10" />
+      </div>
+      <div
+        ref={ref}
+        className={`relative max-w-3xl mx-auto fade-in-section ${isVisible ? 'is-visible' : ''}`}
+      >
         <p className="text-xs tracking-widest uppercase text-zinc-500 font-medium mb-4">
           Formulaire d'eligibilite
         </p>
@@ -110,7 +120,7 @@ const EligibilityForm: React.FC = () => {
           Les champs marques d'un <span className="text-red-400">*</span> sont obligatoires.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+        <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8 shadow-[0_30px_70px_-50px_rgba(0,0,0,0.9)]" noValidate>
           {/* Live region for form errors */}
           <div aria-live="polite" aria-atomic="true" className="sr-only">
             {submitted && Object.keys(errors).length > 0 && (
@@ -290,10 +300,10 @@ const EligibilityForm: React.FC = () => {
               aria-required="true"
               aria-invalid={!!fieldError('consent')}
               aria-describedby={fieldError('consent') ? 'consent-error' : undefined}
-              checked={formData.consent}
-              onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
-              className="mt-1 w-4 h-4 bg-zinc-950 border-white/20 rounded focus:ring-zinc-400 focus:ring-offset-0 accent-zinc-100"
-            />
+                checked={formData.consent}
+                onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-zinc-950 accent-zinc-100 focus:ring-emerald-400/30 focus:ring-offset-0"
+              />
             <div>
               <Label htmlFor="consent" className="text-sm text-zinc-500 font-normal cursor-pointer leading-relaxed">
                 J'accepte d'etre recontacte pour l'etude d'eligibilite et l'audit. <span className="text-red-400" aria-hidden="true">*</span>
@@ -308,7 +318,7 @@ const EligibilityForm: React.FC = () => {
             type="submit"
             disabled={isSubmitting}
             aria-busy={isSubmitting}
-            className="w-full bg-white text-black hover:bg-zinc-200 transition-colors duration-300 font-medium py-6 text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-b from-white to-zinc-100 text-black hover:shadow-lg hover:shadow-emerald-500/10 hover:scale-[1.02] transition-[transform,box-shadow,background-color] duration-base font-medium py-6 text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Envoi en cours\u2026' : 'Envoyer la demande'}
           </Button>

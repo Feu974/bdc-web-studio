@@ -71,11 +71,12 @@ export function ChatWidget() {
   const openButtonRef = useRef<HTMLButtonElement>(null)
   const [unreadCount, setUnreadCount] = useState(0)
   const [initialized, setInitialized] = useState(false)
+  const [hasAnimatedLauncher, setHasAnimatedLauncher] = useState(false)
   const prefersReducedMotion = useReducedMotion()
 
-  const motionProps = prefersReducedMotion
-    ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.01 } }
-    : undefined
+  useEffect(() => {
+    setHasAnimatedLauncher(true)
+  }, [])
 
   // Welcome message
   useEffect(() => {
@@ -223,7 +224,12 @@ export function ChatWidget() {
           <motion.div
             {...(prefersReducedMotion
               ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.01 } }
-              : { initial: { scale: 0, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0, opacity: 0 }, transition: { type: "spring", stiffness: 260, damping: 20 } }
+              : {
+                  initial: hasAnimatedLauncher ? false : { opacity: 0, y: 18 },
+                  animate: { opacity: 1, y: 0 },
+                  exit: { opacity: 0, y: 12 },
+                  transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
+                }
             )}
             className="fixed bottom-6 right-6 z-50"
           >
@@ -231,7 +237,7 @@ export function ChatWidget() {
               ref={openButtonRef}
               onClick={() => setIsOpen(true)}
               aria-label={unreadCount > 0 ? `Ouvrir le chat (${unreadCount} message${unreadCount > 1 ? 's' : ''} non lu${unreadCount > 1 ? 's' : ''})` : 'Ouvrir le chat'}
-              className="relative h-16 w-16 rounded-full bg-white text-black hover:bg-zinc-100 shadow-2xl hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
+              className="relative h-16 w-16 rounded-full bg-white text-black shadow-[0_22px_45px_-24px_rgba(0,0,0,0.72)] transition-[transform,box-shadow,background-color] duration-base hover:-translate-y-[2px] hover:bg-zinc-100 hover:shadow-[0_28px_60px_-28px_rgba(16,185,129,0.18)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
             >
               <MessageCircle className="h-7 w-7" aria-hidden="true" />
               {unreadCount > 0 && (
@@ -240,7 +246,7 @@ export function ChatWidget() {
                     ? { initial: false, animate: { opacity: 1 } }
                     : { initial: { scale: 0 }, animate: { scale: 1 } }
                   )}
-                  className="absolute -top-1 -right-1 h-6 w-6 bg-accent rounded-full flex items-center justify-center text-white text-xs font-bold"
+                  className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-brand-accent text-xs font-bold text-black"
                   aria-hidden="true"
                 >
                   {unreadCount}
@@ -263,7 +269,7 @@ export function ChatWidget() {
               ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.01 } }
               : { initial: { opacity: 0, y: 24, scale: 0.96 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0, y: 24, scale: 0.96 }, transition: { type: "spring", stiffness: 280, damping: 26 } }
             )}
-            className="fixed bottom-6 right-6 w-[380px] h-[600px] bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
+            className="fixed bottom-6 right-6 w-[380px] h-[600px] bg-zinc-950/95 backdrop-blur-sm border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="bg-black border-b border-zinc-800 p-4 flex items-center justify-between">
@@ -340,8 +346,8 @@ export function ChatWidget() {
                   <button
                     key={reply}
                     type="button"
-                    onClick={() => handleQuickReply(reply)}
-                    className="inline-flex items-center px-3 py-1 text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-300 cursor-pointer border border-zinc-800 hover:border-zinc-700 transition-all duration-200 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-zinc-950"
+                  onClick={() => handleQuickReply(reply)}
+                    className="inline-flex items-center rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-xs font-medium text-zinc-300 transition-[border-color,background-color,color] duration-fast hover:bg-emerald-500/10 hover:border-emerald-400/30 hover:text-emerald-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-zinc-950"
                   >
                     {reply}
                   </button>
@@ -364,13 +370,13 @@ export function ChatWidget() {
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Votre message..."
                   aria-label="Votre message"
-                  className="flex-1 bg-zinc-900 border-zinc-800 text-zinc-50 placeholder:text-zinc-500 focus:border-accent"
+                  className="flex-1 border-zinc-800 bg-zinc-900 text-zinc-50 placeholder:text-zinc-500 transition-[border-color,box-shadow] duration-base focus:border-brand-accent/50 focus:ring-brand-accent/30"
                 />
                 <Button
                   type="submit"
                   disabled={!inputValue.trim() || isTyping}
                   aria-label="Envoyer le message"
-                  className="bg-white text-black hover:bg-zinc-100 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black"
+                  className="bg-white text-black transition-[transform,background-color,box-shadow] duration-fast hover:-translate-y-[1px] hover:bg-zinc-100 hover:shadow-[0_18px_36px_-22px_rgba(255,255,255,0.4)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black"
                 >
                   <Send className="h-4 w-4" aria-hidden="true" />
                 </Button>

@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Zap, ShieldCheck, Code2, Server, CheckCircle } from 'lucide-react'
+import { useFadeIn } from '@/hooks/use-fade-in'
 import type { InfrastructureCard } from '@/types/business'
 
 const ICON_MAP = {
@@ -53,9 +54,15 @@ const CARDS: InfrastructureCard[] = [
   },
 ]
 
-const InfrastructuresSection: React.FC = () => (
-  <section id="infrastructures" className="bg-zinc-950 py-24 md:py-36 px-6 md:px-8">
-    <div className="max-w-7xl mx-auto">
+const InfrastructuresSection: React.FC = () => {
+  const { ref, isVisible } = useFadeIn()
+
+  return (
+    <section id="infrastructures" className="bg-zinc-950 py-24 md:py-36 px-6 md:px-8">
+      <div
+        ref={ref}
+        className={`max-w-7xl mx-auto fade-in-section ${isVisible ? 'is-visible' : ''}`}
+      >
       <p className="text-xs tracking-widest uppercase text-zinc-500 font-medium mb-4">
         Architecture technique
       </p>
@@ -68,32 +75,41 @@ const InfrastructuresSection: React.FC = () => (
           return (
             <Card
               key={card.title}
-              className="bg-white/[0.03] border-white/10 p-6 md:p-8 hover:border-white/20 transition-all duration-300 group"
+              className="group relative overflow-hidden bg-white/[0.03] border-white/10 p-6 md:p-8 transition-[transform,border-color,box-shadow] duration-base hover:-translate-y-[2px] hover:border-white/20 hover:shadow-[0_26px_60px_-38px_rgba(0,0,0,0.9)]"
             >
-              <div className="flex items-start justify-between mb-6">
-                <div className="w-12 h-12 bg-white/[0.05] rounded-xl flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-colors duration-300">
-                  <IconComponent className="w-6 h-6 text-zinc-300" aria-hidden="true" />
+              {/* Watermark icone decorative */}
+              <IconComponent
+                className="absolute right-4 bottom-4 w-16 h-16 text-white/[0.03] transition-colors duration-base group-hover:text-white/[0.06]"
+                aria-hidden="true"
+              />
+
+              <div className="relative">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-12 h-12 bg-white/[0.05] rounded-xl flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-colors duration-base">
+                    <IconComponent className="w-6 h-6 text-zinc-300" aria-hidden="true" />
+                  </div>
+                  <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs rounded-full px-3 py-1">
+                    Standard BDC
+                  </Badge>
                 </div>
-                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-400/30 font-medium text-xs rounded-full px-3 py-1">
-                  Standard BDC
-                </Badge>
+                <h3 className="text-xl font-bold tracking-tight mb-3 text-zinc-100">{card.title}</h3>
+                <p className="text-sm text-zinc-500 mb-5">{card.description}</p>
+                <ul className="space-y-2.5 text-sm">
+                  {card.features.map((feat) => (
+                    <li key={feat} className="flex items-start gap-2.5">
+                      <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span className="text-zinc-400">{feat}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <h3 className="text-xl font-bold tracking-tight mb-3 text-zinc-100">{card.title}</h3>
-              <p className="text-sm text-zinc-500 mb-5">{card.description}</p>
-              <ul className="space-y-2.5 text-sm">
-                {card.features.map((feat) => (
-                  <li key={feat} className="flex items-start gap-2.5">
-                    <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                    <span className="text-zinc-400">{feat}</span>
-                  </li>
-                ))}
-              </ul>
             </Card>
           )
         })}
       </div>
-    </div>
-  </section>
-)
+      </div>
+    </section>
+  )
+}
 
 export default InfrastructuresSection

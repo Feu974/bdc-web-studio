@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
     <nav
       aria-label="Navigation principale"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-slow ${isScrolled
-          ? 'bg-zinc-950/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20'
+          ? 'bg-zinc-950/80 backdrop-blur-xl border-b border-white/5 shadow-lg shadow-black/20'
           : 'bg-transparent border-b border-transparent'
         }`}
     >
@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <a
             href="#contenu-principal"
-            className="flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded"
+            className="flex items-center gap-1.5 hover:opacity-80 transition-opacity duration-base focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded"
             role="img"
             aria-label="BDC Web — Accueil"
           >
@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center gap-4">
             <Button
               onClick={() => scrollToSection('eligibilite')}
-              className="hidden md:inline-flex bg-white text-black hover:bg-zinc-200 transition-colors duration-base font-medium text-sm px-5 py-2 rounded-lg"
+              className="hidden md:inline-flex bg-gradient-to-b from-white to-zinc-100 text-black hover:shadow-lg hover:shadow-emerald-500/10 hover:scale-[1.02] transition-[transform,box-shadow,background-color] duration-base font-medium text-sm px-5 py-2 rounded-lg"
             >
               Verifier mon eligibilite
             </Button>

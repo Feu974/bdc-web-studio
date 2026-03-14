@@ -60,12 +60,13 @@ export default function TargetSectors() {
           adaptee a chaque metier, financee jusqu'a 80 % par le FEDER.
         </p>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SECTORS.map((sector) => {
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
+          {SECTORS.map((sector, index) => {
             const IconComponent = sector.icon
             return (
               <article
                 key={sector.name}
+                style={{ transitionDelay: `${index * 100}ms` }}
                 className="group rounded-2xl border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-8 transition-[transform,border-color,box-shadow,background-color] duration-base hover:-translate-y-[2px] hover:border-emerald-400/30 hover:bg-emerald-500/5 hover:shadow-[0_26px_60px_-38px_rgba(0,0,0,0.9)]"
               >
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-400/15 bg-emerald-500/10 transition-colors duration-base group-hover:bg-emerald-500/15">

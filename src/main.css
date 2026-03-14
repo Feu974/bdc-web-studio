@@ -254,3 +254,27 @@
     transition: none;
   }
 }
+
+/* ─── Staggered card reveals ───────────────────────────────────────────── */
+/* Cartes enfants dans un conteneur is-visible : fade-in avec delay incremental */
+@media (prefers-reduced-motion: no-preference) {
+  .stagger-children > * {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity var(--duration-slow) ease-out,
+      transform var(--duration-slow) ease-out;
+  }
+  .fade-in-section.is-visible .stagger-children > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger-children > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
   return (
     <nav
       aria-label="Navigation principale"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-slow ${isScrolled
           ? 'bg-zinc-950/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20'
           : 'bg-transparent border-b border-transparent'
         }`}
@@ -61,7 +61,7 @@ const Navbar: React.FC = () => {
                 key={link.sectionId}
                 href={`#${link.sectionId}`}
                 onClick={(e) => { e.preventDefault(); scrollToSection(link.sectionId); }}
-                className="text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1"
+                className="relative text-sm text-zinc-500 hover:text-zinc-100 transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black rounded px-1 after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:bg-emerald-400 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left"
               >
                 {link.label}
               </a>
@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center gap-4">
             <Button
               onClick={() => scrollToSection('eligibilite')}
-              className="hidden md:inline-flex bg-white text-black hover:bg-zinc-200 transition-colors duration-300 font-medium text-sm px-5 py-2 rounded-lg"
+              className="hidden md:inline-flex bg-white text-black hover:bg-zinc-200 transition-colors duration-base font-medium text-sm px-5 py-2 rounded-lg"
             >
               Verifier mon eligibilite
             </Button>
@@ -98,7 +98,7 @@ const Navbar: React.FC = () => {
                 href={`#${link.sectionId}`}
                 role="menuitem"
                 onClick={(e) => { e.preventDefault(); scrollToSection(link.sectionId); }}
-                className="block w-full text-left text-zinc-400 hover:text-zinc-100 transition-colors duration-300 py-2 focus:outline-none focus:ring-2 focus:ring-white rounded px-1"
+                className="block w-full text-left text-zinc-400 hover:text-zinc-100 transition-colors duration-base py-2 focus:outline-none focus:ring-2 focus:ring-white rounded px-1"
               >
                 {link.label}
               </a>

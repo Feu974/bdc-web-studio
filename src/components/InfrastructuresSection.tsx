@@ -69,12 +69,13 @@ const InfrastructuresSection: React.FC = () => {
       <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-16 text-zinc-100">
         Infrastructures.
       </h2>
-      <div className="grid md:grid-cols-2 gap-6">
-        {CARDS.map((card) => {
+      <div className="grid md:grid-cols-2 gap-6 stagger-children">
+        {CARDS.map((card, index) => {
           const IconComponent = ICON_MAP[card.icon]
           return (
             <Card
               key={card.title}
+              style={{ transitionDelay: `${index * 100}ms` }}
               className="group relative overflow-hidden bg-white/[0.03] border-white/10 p-6 md:p-8 transition-[transform,border-color,box-shadow] duration-base hover:-translate-y-[2px] hover:border-white/20 hover:shadow-[0_26px_60px_-38px_rgba(0,0,0,0.9)]"
             >
               {/* Watermark icone decorative */}

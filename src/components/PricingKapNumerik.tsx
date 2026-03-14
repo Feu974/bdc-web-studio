@@ -262,9 +262,11 @@ const PricingKapNumerik: React.FC = () => {
         </p>
 
         {/* Grille 3 packs */}
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto items-start mb-12">
-          {PACKS.map((pack) => (
-            <PackCard key={pack.id} plan={pack} onCTA={scrollToEligibilite} />
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto items-start mb-12 stagger-children">
+          {PACKS.map((pack, index) => (
+            <div key={pack.id} style={{ transitionDelay: `${index * 100}ms` }}>
+              <PackCard plan={pack} onCTA={scrollToEligibilite} />
+            </div>
           ))}
         </div>
 
